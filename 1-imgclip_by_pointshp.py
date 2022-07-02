@@ -145,12 +145,12 @@ def clip(out_tif_name, sr_img, point_shp):
 # 防止GDAL报ERROR4错误 gdal_gata文件夹需要相应配置
 os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data'
 
-sr_image_path = r"E:\dataset\水体影像\湖泊河流" #原始影像
-point_shp = r"E:\xinjiang\water\point_samples\water_samples.shp" #中心点point文件
-out_path = r"E:\xinjiang\water\clip_srimg" #输出目标文件夹
-datasize = 1000 #输出的影像大小（像素）
+sr_image_path = r"E:\xinjiang\water\0-srimg" #原始影像
+point_shp = r"E:\xinjiang\water\0-point_samples\water_samples.shp" #中心点point文件
+out_path = r"E:\xinjiang\water\1-clip_srimg" #输出目标文件夹
+datasize = 1024 #输出的影像大小（像素）
 img_type = '*.dat' #原始影像类型 不可漏*.
-output_prefix = 'xj_water' #输出小块影像文件名的前缀
+output_prefix = 'xjTest_water' #输出小块影像文件名的前缀
 
 if not os.path.exists(out_path):
     os.mkdir(out_path)

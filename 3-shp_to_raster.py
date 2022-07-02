@@ -24,7 +24,7 @@ image_path = r'E:\xinjiang\water\1-clip_srimg' #存储样本影像的文件夹
 line_path = r'E:\xinjiang\water\1-artificialshpLabel' #存储人工勾画边缘线矢量的文件夹
 save_path = r'E:\xinjiang\water\1-raster_label' #输出的矢量转栅格样本文件夹
 background_value = 0 #栅格化后背景值
-foreground_value = 1 #栅格化后前景值
+foreground_value = 255 #栅格化后前景值
 
 img_list = fnmatch.filter(os.listdir(image_path), '*.tif') # 过滤出所有tif文件
 

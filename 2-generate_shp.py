@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-输入样本栅格影像文件夹，批量生成对应的矢量文件并自动添加label字段，为勾样本做准备
-地块样本制作的第二步
+样本制作第二步
+批量生成对应的矢量文件并自动添加label字段，为勾样本做准备
 ~~~~~~~~~~~~~~~~
 code by wHy
 Aerospace Information Research Institute, Chinese Academy of Sciences
@@ -48,8 +48,7 @@ for img in image_list:
         print('创建shp文件失败')
 
     spatial_ref = osr.SpatialReference(wkt=dataset.GetProjection())
-    oLayer = shp_dataset.CreateLayer("polygon", spatial_ref, ogr.wkbPolygon)  # 保证图层名与属性一致
-    #oLayer = shp_dataset.CreateLayer("line", spatial_ref, ogr.wkbLineString)  # 保证图层名与属性一致
+    oLayer = shp_dataset.CreateLayer("polygon", spatial_ref, ogr.wkbPolygon)  # 保证图层名与属性一致 面矢量ogr.wkbPolygon 线矢量ogr.wkbLineString
     oFieldID = ogr.FieldDefn("label", ogr.OFSTInt16)
     oLayer.CreateField(oFieldID, 1)
 

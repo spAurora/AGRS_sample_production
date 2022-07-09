@@ -43,7 +43,6 @@ def write_img(out_path, im_proj, im_geotrans, im_data):
 
     # 计算波段数
     if len(im_data.shape) > 1:  # 多波段
-
         im_bands, im_height, im_width = im_data.shape
     else:  # 单波段
         im_bands, (im_height, im_width) = 1, im_data.shape
@@ -82,10 +81,7 @@ def clip(out_tif_name, sr_img, point_shp):
         print('open sr_img false')
         sys.exit(1)  # 0为正常，1~127为异常
     im_geotrans = im_dataset.GetGeoTransform()
-    #print('仿射变换参数'+str(im_geotrans)) #debug
     im_proj = im_dataset.GetProjection()
-    #print('投影信息:',str(im_proj)) #debug
-    #print('波段数:'+str(im_dataset.RasterCount)) #debug
     im_width = im_dataset.RasterXSize
     im_height = im_dataset.RasterYSize
 
@@ -96,13 +92,11 @@ def clip(out_tif_name, sr_img, point_shp):
         sys.exit(1)
     layer = shp_dataset.GetLayer()
     point_proj = layer.GetSpatialRef()
-    #print('point shp proj: ', point_proj) #debug
 
     cnt = 0
     feature = layer.GetNextFeature()
     while feature:
         geom = feature.GetGeometryRef()
-        #print('geom: '+str(geom)) #debug
         geoX = geom.GetX()
         geoY = geom.GetY()
         g0 = float(im_geotrans[0])
@@ -115,11 +109,7 @@ def clip(out_tif_name, sr_img, point_shp):
         x = (geoX*g5 - g0*g5 - geoX*g2 + g3*g2)/(g1*g5 - g4*g2)
         y = (geoY - g3 - geoX*g4)/ g5
 
-        #x = (geoX - g0) / g1
-        #y = (geoY - g3) / g5
-
         x, y = int(x), int(y)
-        #print('x,y: ', x, y) #debug
 
         a1 = x - adatasize
         a2 = y - adatasize
@@ -135,7 +125,6 @@ def clip(out_tif_name, sr_img, point_shp):
             im_geotrans_list[3] = geoY2
             strname = out_tif_name + '_' + str(cnt) + '.tif'
             write_img(strname, im_proj, im_geotrans_list, im_data)
-        #print(a1, a2, a3, a4, cnt) #debug
         feature.Destroy()
         feature = layer.GetNextFeature()
 

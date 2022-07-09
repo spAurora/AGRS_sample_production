@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-输入小块的样本影像和勾画的矢量shp，输出最终带标签的栅格样本
-地块样本制作的第三步
+样本制作第三步
+矢量样本栅格化
 ~~~~~~~~~~~~~~~~
 code by wHy
 Aerospace Information Research Institute, Chinese Academy of Sciences

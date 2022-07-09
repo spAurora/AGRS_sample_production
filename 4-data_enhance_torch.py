@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
+样本制作的第四步
 样本增强（torch版本）
-模型样本制作的第四步
 ~~~~~~~~~~~~~~~~
 code by wHy
 Aerospace Information Research Institute, Chinese Academy of Sciences

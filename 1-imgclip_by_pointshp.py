@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-根据点shp文件，以各个点为中心，将周围的小块影像裁剪出来
 样本制作的第一步
+根据点shp文件，以各个点为中心，将周围的小块影像裁剪出来
 *必须保证原始影像和点shp文件的投影一致
 ~~~~~~~~~~~~~~~~
 code by wHy
@@ -62,7 +62,7 @@ def write_img(out_path, im_proj, im_geotrans, im_data):
     del new_dataset
 
 
-def clip(out_tif_name, sr_img, point_shp):
+def clip(out_tif_name, sr_img, point_shp, cut_cnt):
     """裁剪主函数
 
     根据点shp从原始影像中裁剪出小块影像用来作样本
@@ -93,7 +93,6 @@ def clip(out_tif_name, sr_img, point_shp):
     layer = shp_dataset.GetLayer()
     point_proj = layer.GetSpatialRef()
 
-    cnt = 0
     feature = layer.GetNextFeature()
     while feature:
         geom = feature.GetGeometryRef()
@@ -116,30 +115,32 @@ def clip(out_tif_name, sr_img, point_shp):
         a3 = x + adatasize
         a4 = y + adatasize
         if a1 > 0 and a2 > 0 and a3 > 0 and a4 > 0 and a3 < im_width and a4 < im_height:
-            cnt += 1
+            cut_cnt = cut_cnt + 1
             geoX2 = g0 + g1 * a1 + g2 * a2
             geoY2 = g3 + g4 * a1 + g5 * a2
             im_data = im_dataset.ReadAsArray(a1, a2, datasize, datasize)
             im_geotrans_list = list(im_geotrans)
             im_geotrans_list[0] = geoX2
             im_geotrans_list[3] = geoY2
-            strname = out_tif_name + '_' + str(cnt) + '.tif'
+            strname = out_tif_name + '_' + str(cut_cnt) + '.tif'
             write_img(strname, im_proj, im_geotrans_list, im_data)
         feature.Destroy()
         feature = layer.GetNextFeature()
+        
 
     shp_dataset.Destroy()
+    return cut_cnt
 
 
 # 防止GDAL报ERROR4错误 gdal_gata文件夹需要相应配置
 os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data'
 
-sr_image_path = r"E:\xinjiang\water\0-srimg" #原始影像
-point_shp = r"E:\xinjiang\water\0-point_samples\water_samples.shp" #中心点point文件
-out_path = r"E:\xinjiang\water\1-clip_srimg" #输出目标文件夹
-datasize = 1024 #输出的影像大小（像素）
+sr_image_path = r"E:\project_manas\0-src_img" #原始影像
+point_shp = r"E:\project_manas\farmland\0-point_sample\farmland_point_sample.shp" #中心点point文件
+out_path = r"E:\project_manas\farmland\1-clip_img" #输出目标文件夹
+datasize = 1000 #输出的影像大小（像素）
 img_type = '*.dat' #原始影像类型 不可漏*.
-output_prefix = 'xjTest_water' #输出小块影像文件名的前缀
+output_prefix = 'manas_farmland' #输出小块影像文件名的前缀
 
 if not os.path.exists(out_path):
     os.mkdir(out_path)
@@ -151,12 +152,13 @@ adatasize = int(datasize / 2)
 print(sr_img_list)
 
 cnt = 0
+cut_cnt = 0
 for sr_img in sr_img_list:
     cnt = cnt+1
     shp_name, extension = os.path.splitext(sr_img)
     sr_img = sr_image_path + '/' + shp_name + img_type[1:]
     out_tif_name = out_path + '/' + output_prefix #改输出编号 
     print('start clip image', cnt)
-    clip(out_tif_name, sr_img, point_shp)
+    cut_cnt = clip(out_tif_name, sr_img, point_shp, cut_cnt)
     print('clip image', cnt,'done')
 print('Finish!')

@@ -61,12 +61,12 @@ def label_colormap(n_label=5):
         )
         return cmap
 
-images_path = r'E:\xinjiang\water\1-clip_srimg' #原始影像路径 栅格
-label_path = r'E:\xinjiang\water\1-raster_label' #标签影像路径 栅格
-save_img_path = r'E:\xinjiang\water\2-enhance_img' #保存增强后影像路径
-save_label_path = r'E:\xinjiang\water\2-enhance_label' #保存增强后标签路径
+images_path = r'E:\manas_class\project_manas\glacier\1-clip_img' #原始影像路径 栅格
+label_path = r'E:\manas_class\project_manas\glacier\1-raster_label' #标签影像路径 栅格
+save_img_path = r'E:\manas_class\project_manas\glacier\2-enhance_img' #保存增强后影像路径
+save_label_path = r'E:\manas_class\project_manas\glacier\2-enhance_label' #保存增强后标签路径
 
-expandNum = 32 #每个样本的扩充数目
+expandNum = 108 #每个样本的扩充数目
 randomCorpSize = 256 #随机裁剪后的样本大小
 randomColorChangeRange = 0.00 #随机色彩变换范围 0~1，越大变化越强 #仅针对3波段影像
 ifGIDDataset = False

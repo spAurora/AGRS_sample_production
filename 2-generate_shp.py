@@ -26,8 +26,8 @@ os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\G
 gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8","NO") #路径支持中文
 gdal.SetConfigOption("SHAPE_ENCODING","") #属性表支持中文
 
-image_path = r'E:\xinjiang\water\1-clip_srimg' #存储样本影像的文件夹
-save_path = r'E:\xinjiang\water\0-otherdata\teach' #输出的矢量文件夹
+image_path = r'E:\manas_class\project_manas\water\0-other_data\negative_sample_img' #存储样本影像的文件夹
+save_path = r'E:\manas_class\project_manas\water\0-other_data\negative_sample_label' #输出的矢量文件夹
 
 ogr.RegisterAll()# 注册所有的驱动
 

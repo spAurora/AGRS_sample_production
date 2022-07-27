@@ -13,9 +13,9 @@ Aerospace Information Research Institute, Chinese Academy of Sciences
 import fnmatch
 import os
 
-traintxt_path = r'E:\manas_class\project_manas\glacier\2-trainlist\trainlist_0713.txt' #输出栅格样本列表文件路径
-image_path = r'E:\manas_class\project_manas\glacier\2-enhance_img' #存储样本影像的文件夹路径
-label_path = r'E:\manas_class\project_manas\glacier\2-enhance_label' #存储栅格标签的文件夹路径
+traintxt_path = r'G:\manas_class\project_manas\farmland\2-trainlist\trainlist_0713.txt' #输出栅格样本列表文件路径
+image_path = r'G:\manas_class\project_manas\farmland\2-enhance_img' #存储样本影像的文件夹路径
+label_path = r'G:\manas_class\project_manas\farmland\2-enhance_label' #存储栅格标签的文件夹路径
 
 img_data_tpye = '*.tif'
 label_data_type = '*.tif'
@@ -26,3 +26,5 @@ for img_file in img_list:
     f.write((image_path + '/' + img_file[0:-4] + img_data_tpye[1:] + ' ').encode())
     f.write((label_path + '/' + img_file[0:-4] + label_data_type[1:] + '\n').encode())
 f.close()
+
+print('Finish')

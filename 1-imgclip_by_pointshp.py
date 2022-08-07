@@ -42,7 +42,7 @@ def write_img(out_path, im_proj, im_geotrans, im_data):
         datatype = gdal.GDT_Float32
 
     # 计算波段数
-    if len(im_data.shape) > 1:  # 多波段
+    if len(im_data.shape) > 2:  # 多波段
         im_bands, im_height, im_width = im_data.shape
     else:  # 单波段
         im_bands, (im_height, im_width) = 1, im_data.shape
@@ -136,11 +136,11 @@ def clip(out_tif_name, sr_img, point_shp, cut_cnt):
 os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data'
 
 sr_image_path = r"G:\manas_class\project_manas\0-src_img" #原始影像
-point_shp = r"G:\manas_class\project_manas\water\0-other_data\binghu_add\0-point_sample\binghu_add_point_sample.shp" #中心点point文件
-out_path = r"G:\manas_class\project_manas\water\0-other_data\binghu_add\1-clip_img" #输出目标文件夹
-datasize = 1000 #输出的影像大小（像素）
+point_shp = r"F:\grass\0-point_sample\New_Shapefile.shp" #中心点point文件
+out_path = r"F:\grass\1-clip_img_add" #输出目标文件夹
+datasize = 512 #输出的影像大小（像素）
 img_type = '*.dat' #原始影像类型 不可漏*.
-output_prefix = 'manas_binghu' #输出小块影像文件名的前缀
+output_prefix = 'manas_grass_add' #输出小块影像文件名的前缀
 
 if not os.path.exists(out_path):
     os.mkdir(out_path)

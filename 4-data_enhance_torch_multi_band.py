@@ -73,12 +73,12 @@ def write_img(out_path, im_data, mode = 1):
 
     del new_dataset
 
-images_path = r'G:\Huyang_test\1-clip_img' #原始影像路径 栅格
-label_path = r'G:\Huyang_test\1-raster_label' #标签影像路径 栅格
-save_img_path = r'G:\Huyang_test\2-enhance_img' #保存增强后影像路径
-save_label_path = r'G:\Huyang_test\2-enhance_label' #保存增强后标签路径
+images_path = r'G:\Huyang_test_0808\1-clip_img' #原始影像路径 栅格
+label_path = r'G:\Huyang_test_0808\1-raster_label' #标签影像路径 栅格
+save_img_path = r'G:\Huyang_test_0808\2-enhance_img' #保存增强后影像路径
+save_label_path = r'G:\Huyang_test_0808\2-enhance_label' #保存增强后标签路径
 
-expandNum = 6 # 每个样本的基础扩充数目，最终扩充数目为expandNum*4
+expandNum = 16 # 每个样本的基础扩充数目
 randomCorpSize = 256 # 随机裁剪后的样本大小
 img_edge_width = 512 # 输入影像的大小
 
@@ -97,7 +97,6 @@ for img_name in tqdm(image_list):
     sr_img = sr_img.transpose(1, 2, 0)
 
     '''样本扩增'''
-    cnt = 0
     for i in range(expandNum):
 
         p1 = np.random.choice([0, max_thread]) # 最大height比例
@@ -111,16 +110,11 @@ for img_name in tqdm(image_list):
 
         new_sr_img = new_sr_img.transpose(2, 0, 1)
 
-        for i in range(4):
-            new_sr_img =transform.rotate(new_sr_img, 90*i)
-            new_label_img =transform.rotate(new_label_img, 90*i)
-
-            save_img_full_path = save_img_path + '/' + img_name[0:-4] + '_' + str(cnt) + '.tif'
-            save_label_full_path = save_label_path + '/' + img_name[0:-4] + '_' + str(cnt) + '.tif'
-            cnt = cnt + 1
-
-            write_img(save_img_full_path, new_sr_img)
-            write_img(save_label_full_path, new_label_img, mode=0)
+        save_img_full_path = save_img_path + '/' + img_name[0:-4] + '_' + str(i) + '.tif'
+        save_label_full_path = save_label_path + '/' + img_name[0:-4] + '_' + str(i) + '.tif'
+            
+        write_img(save_img_full_path, new_sr_img)
+        write_img(save_label_full_path, new_label_img, mode=0)
 
 
 

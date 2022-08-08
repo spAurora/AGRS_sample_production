@@ -27,6 +27,7 @@ line_path = r'G:\Huyang_test_0808\1-artificial_shp' #存储人工勾画矢量的
 save_path = r'G:\Huyang_test_0808\1-raster_label' #输出的矢量转栅格样本文件夹
 num_classes = 2 #类别数 不包含背景0
 
+
 img_list = fnmatch.filter(os.listdir(image_path), '*.tif') # 过滤出所有tif文件
 
 '''逐影像'''
@@ -89,7 +90,7 @@ for img_file in img_list:
         targetDataset = None
 
         image_tmp = gdal.Open('temp.tif')
-        data_tmp = image.GetRasterBand(1).ReadAsArray().astype(np.uint8)
+        data_tmp = image_tmp.GetRasterBand(1).ReadAsArray().astype(np.uint8)
         data_tmp[np.where(data_tmp > 0)] = focus_label_value
         data.append(data_tmp)
 
@@ -101,13 +102,13 @@ for img_file in img_list:
     vector.Destroy()
 
     '''叠置data处理'''
-    data = np.array(data)
-    data_shape = np.shape(data)
+    data_array = np.array(data)
+    data_shape = np.shape(data_array)
 
     data_out = np.zeros((int(data_shape[1]), int(data_shape[2])))
     for i in range(data_shape[1]):
         for j in range(data_shape[2]):
-            data_out[i, j] = max(data[:, i, j])
+            data_out[i, j] = max(data_array[:, i, j])
 
     '''保存栅格样本文件'''
     driver = gdal.GetDriverByName("GTiff")

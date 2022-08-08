@@ -22,17 +22,17 @@ import ogr
 
 os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data' #防止报error4错误
 
-image_path = r'D:\img_8' #存储样本影像的文件夹
-line_path = r'D:\img_8' #存储人工勾画矢量的文件夹
-save_path = r'D:\img_8\out' #输出的矢量转栅格样本文件夹
+image_path = r'G:\Huyang_test_0808\1-clip_img' #存储样本影像的文件夹
+line_path = r'G:\Huyang_test_0808\1-artificial_shp' #存储人工勾画矢量的文件夹
+save_path = r'G:\Huyang_test_0808\1-raster_label' #输出的矢量转栅格样本文件夹
 num_classes = 2 #类别数 不包含背景0
 
-data = []
 img_list = fnmatch.filter(os.listdir(image_path), '*.tif') # 过滤出所有tif文件
 
 '''逐影像'''
 for img_file in img_list:
     '''预处理'''
+    data = []
     image_file = os.path.join(image_path + '/' + img_file)
     line_file = os.path.join(line_path + '/' + img_file[0:-4] + '_label.shp')
     outraster_file = os.path.join(save_path + '/' + img_file[0:-4] + '.tif')

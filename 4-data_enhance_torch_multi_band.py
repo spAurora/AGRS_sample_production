@@ -16,7 +16,7 @@ from tqdm import tqdm
 import gdal
 import sys
 from skimage import transform
-
+from PIL import Image
 
 def read_img(sr_img):
     """read img
@@ -38,7 +38,7 @@ def read_img(sr_img):
 
     return im_data
 
-def write_img(out_path, im_data, mode = 1):
+def write_img(out_path, im_data, mode = 1, rotate = 0):
     """output img
 
     Args:
@@ -64,12 +64,33 @@ def write_img(out_path, im_data, mode = 1):
     driver = gdal.GetDriverByName("GTiff")
     new_dataset = driver.Create(
         out_path, im_width, im_height, im_bands, datatype)
+    
 
-    if im_bands == 1:
-        new_dataset.GetRasterBand(1).WriteArray(im_data)
-    else:
-        for i in range(im_bands):
-            new_dataset.GetRasterBand(i + 1).WriteArray(im_data[i])
+    for i in range(im_bands):
+        if mode == 0:
+            tmp = im_data
+        elif mode == 1:
+            tmp = im_data[i]
+        else:
+            print('mode should 0 or 1!')
+        im = Image.fromarray(tmp)
+
+        if rotate == 0:
+            out = im
+        elif rotate == 1:
+            out = im.transpose(Image.FLIP_LEFT_RIGHT)
+        elif rotate == 2:
+            out = im.transpose(Image.FLIP_TOP_BOTTOM)
+        elif rotate == 3:
+            out = im.transpose(Image.ROTATE_90)
+        elif rotate == 4:
+            out = im.transpose(Image.ROTATE_180)
+        elif rotate == 5:
+            out = im.transpose(Image.ROTATE_270)
+
+        tmp = np.array(out)
+
+        new_dataset.GetRasterBand(i + 1).WriteArray(tmp)
 
     del new_dataset
 
@@ -78,7 +99,7 @@ label_path = r'G:\Huyang_test_0808\1-raster_label' #标签影像路径 栅格
 save_img_path = r'G:\Huyang_test_0808\2-enhance_img' #保存增强后影像路径
 save_label_path = r'G:\Huyang_test_0808\2-enhance_label' #保存增强后标签路径
 
-expandNum = 16 # 每个样本的基础扩充数目
+expandNum = 6 # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
 randomCorpSize = 256 # 随机裁剪后的样本大小
 img_edge_width = 512 # 输入影像的大小
 
@@ -97,6 +118,7 @@ for img_name in tqdm(image_list):
     sr_img = sr_img.transpose(1, 2, 0)
 
     '''样本扩增'''
+    cnt = 0
     for i in range(expandNum):
 
         p1 = np.random.choice([0, max_thread]) # 最大height比例
@@ -109,12 +131,12 @@ for img_name in tqdm(image_list):
         new_label_img = sr_label[start_x:start_x+randomCorpSize, start_y:start_y+randomCorpSize]
 
         new_sr_img = new_sr_img.transpose(2, 0, 1)
-
-        save_img_full_path = save_img_path + '/' + img_name[0:-4] + '_' + str(i) + '.tif'
-        save_label_full_path = save_label_path + '/' + img_name[0:-4] + '_' + str(i) + '.tif'
-            
-        write_img(save_img_full_path, new_sr_img)
-        write_img(save_label_full_path, new_label_img, mode=0)
+        for j in range(6):
+            save_img_full_path = save_img_path + '/' + img_name[0:-4] + '_' + str(cnt) + '.tif'
+            save_label_full_path = save_label_path + '/' + img_name[0:-4] + '_' + str(cnt) + '.tif'
+            cnt += 1
+            write_img(save_img_full_path, new_sr_img, mode=1, rotate=j)
+            write_img(save_label_full_path, new_label_img, mode=0, rotate=j)
 
 
 

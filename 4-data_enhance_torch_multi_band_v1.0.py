@@ -4,10 +4,9 @@
 """
 样本制作的第四步
 针对多波段影像的样本增强（大于4波段）
+实现了对多波段影像的色彩变换
 ~~~~~~~~~~~~~~~~
-code by wHy
-Aerospace Information Research Institute, Chinese Academy of Sciences
-751984964@qq.com
+code by WHR
 """
 import numpy as np
 import os

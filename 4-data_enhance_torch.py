@@ -28,7 +28,7 @@ def color2gray(image_rgb, rgb_mapping):
         if ndim == 3:
             idx = np.where((image_rgb[..., 0] == rgb[0]) & (image_rgb[..., 1] == rgb[1]) & (image_rgb[..., 2] == rgb[2]))
         elif ndim == 2:
-            idx = np.where(image_rgb == rgb[0])
+            idx = np.where(image_rgb == rgb)
         else:
             print('不支持的数据维度')
             exit(-1)
@@ -60,22 +60,38 @@ def label_colormap(n_label=5):
             dtype=np.uint8,
         )
         return cmap
+    if n_label ==8:
+        cmap = np.array(
+            [
+                (0), #背景值
+                (100),
+                (200),
+                (300),
+                (400),
+                (500),
+                (600),
+                (700),
+                (800),
+            ],
+            dtype=np.int,
+        )
+        return cmap
 
-images_path = r'E:\project_UAV\1-clip_img' #原始影像路径 栅格
-label_path = r'E:\project_UAV\1-raster_label' #标签影像路径 栅格
-save_img_path = r'E:\project_UAV\2-enhance_img' #保存增强后影像路径
-save_label_path = r'E:\project_UAV\2-enhance_label' #保存增强后标签路径
+images_path = r'C:\Users\75198\Documents\WeChat Files\wxid_qg2ddhelak9h22\FileStorage\File\2022-11\1-clip_img' #原始影像路径 栅格
+label_path = r'C:\Users\75198\Documents\WeChat Files\wxid_qg2ddhelak9h22\FileStorage\File\2022-11\1-raster_label' #标签影像路径 栅格
+save_img_path = r'C:\Users\75198\Documents\WeChat Files\wxid_qg2ddhelak9h22\FileStorage\File\2022-11\2-enhance_img' #保存增强后影像路径
+save_label_path = r'C:\Users\75198\Documents\WeChat Files\wxid_qg2ddhelak9h22\FileStorage\File\2022-11\2-enhance_label' #保存增强后标签路径
 
-expandNum = 24 #每个样本的扩充数目
-randomCorpSize = 768 #随机裁剪后的样本大小
-randomColorChangeRange = 0.00 #随机色彩变换范围 0~1，越大变化越强 #仅针对3波段影像
+expandNum = 6 #每个样本的扩充数目
+randomCorpSize = 64 #随机裁剪后的样本大小
+randomColorChangeRange = 0.02 #随机色彩变换范围 0~1，越大变化越强 #仅针对3波段影像
 ifGIDDataset = False
-GIDdatasetClassNum = 5
-
+GIDdatasetClassNum = 8
 
 image_list = fnmatch.filter(os.listdir(images_path), '*.tif')  # 过滤出tif文件
 
 for img_name in tqdm(image_list):
+
     img_full_path = os.path.join(images_path + '/' + img_name)
     label_full_path = os.path.join(label_path + '/' + img_name[0:-4] + '.tif')
 
@@ -90,14 +106,17 @@ for img_name in tqdm(image_list):
 
         p1 = np.random.choice([0,1])
         p2 = np.random.choice([0,1])
+        p3 = np.random.choice([0,45])
         im_aug = transforms.Compose([transforms.RandomCrop(randomCorpSize),      
                 transforms.RandomHorizontalFlip(p1),
                 transforms.RandomVerticalFlip(p2),
+                transforms.RandomRotation(p3),
                 transforms.ColorJitter(brightness=randomColorChangeRange, contrast=randomColorChangeRange, saturation=randomColorChangeRange, hue=randomColorChangeRange)])
 
         label_aug = transforms.Compose([transforms.RandomCrop(randomCorpSize),      
                 transforms.RandomHorizontalFlip(p1),
-                transforms.RandomVerticalFlip(p2)]) #标签颜色不能变换
+                transforms.RandomVerticalFlip(p2),
+                transforms.RandomRotation(p3)]) #标签颜色不能变换
 
         torch.manual_seed(i+627)
         new_sr_img = im_aug(sr_img)

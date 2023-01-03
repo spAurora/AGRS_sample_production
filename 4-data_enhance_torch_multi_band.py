@@ -112,6 +112,32 @@ def AddHaze(img, perlin):
             img_f[j][l] = img_f[j][l] * td + A * (1 - td)
     return img_f * 255
 
+def AddHaze_1209(img, band_index):
+    '''影像加雾 1209
+    大气散射模型+真值反演参数
+    二元一次函数简化的大气散射模型
+    Args:
+        img: 原始影像，值域[0,255]
+
+    Returns:
+        img_f: 加雾后的影像，值域[0,255]
+
+    Raises:
+        无
+    '''
+    img_f = img
+    (row, col) = img.shape
+
+    A = np.random.uniform(0.36, 0.38)
+
+    k = [0.43398, 0.45639, 0.46805, 0.47429, 0.47367, 0.39296, 0.30265, 0.30694]
+    d = [37.19871505722094, 39.78363484424905, 41.03992916964764, 42.94155162277795, 44.74225866292751, 50.07052805813309, 61.02356188231779, 51.23899501134923]
+
+    for j in range(row):
+        for l in range(col):          
+            img_f[j][l] = img_f[j][l] * k[band_index] + d[band_index]
+    return img_f
+
 def AddHaze2(img):
     '''简化版的影像加雾
     Args:
@@ -208,7 +234,8 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
         if addHaze == True:
             perlin_noise = perlin_array(shape=(im_height, im_width), scale=200,
                                             octaves=6, persistence=0.5, lacunarity=2.0, seed=seed)
-            tmp = AddHaze(tmp, perlin_noise)
+            # tmp = AddHaze(tmp, perlin_noise)
+            tmp = AddHaze_1209(tmp, i)
 
         new_dataset.GetRasterBand(i + 1).WriteArray(tmp)
 
@@ -217,8 +244,8 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
 
 images_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-clip_img'  # 原始影像路径 栅格
 label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-raster_label'  # 标签影像路径 栅格
-save_img_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_img_addhaze_test'  # 保存增强后影像路径
-save_label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_label_addhaze_test'  # 保存增强后标签路径
+save_img_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_img_addhaze_1209'  # 保存增强后影像路径
+save_label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_label_addhaze_1209'  # 保存增强后标签路径
 
 expandNum = 8  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
 randomCorpSize = 256  # 随机裁剪后的样本大小

@@ -136,11 +136,11 @@ def clip(out_tif_name, sr_img, point_shp, cut_cnt):
 os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data'
 
 sr_image_path = r"E:\xinjiang_huyang_hongliu\WV_GF_Tarim\WV2_dealed\Talimu_dealed" #原始影像
-point_shp = r"C:\Users\75198\OneDrive\project_paper_3\0-points\youyun.shp" #中心点point文件
-out_path = r"C:\Users\75198\OneDrive\project_paper_3\0-other_data\real_haze" #输出目标文件夹
-datasize = 512 #输出的影像大小（像素）
+point_shp = r"E:\xinjiang_huyang_hongliu\Huyang_test_0808\0-FL_test\0-point\real_haze_FL.shp" #中心点point文件
+out_path = r"E:\xinjiang_huyang_hongliu\Huyang_test_0808\0-FL_test\real_haze_img" #输出目标文件夹
+datasize = 256 #输出的影像大小（像素）
 img_type = '*.dat' #原始影像类型 不可漏*.
-output_prefix = 'huyang_hongliu_youyun' #输出小块影像文件名的前缀
+output_prefix = 'FL_real_haze' #输出小块影像文件名的前缀
 
 if not os.path.exists(out_path):
     os.mkdir(out_path)

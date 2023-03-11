@@ -19,6 +19,7 @@ from skimage import transform
 from PIL import Image
 from noise import pnoise2, snoise2
 import math
+from scipy.signal import convolve2d
 
 
 def perlin_array(shape=(200, 200),
@@ -138,6 +139,49 @@ def AddHaze_1209(img, band_index):
             img_f[j][l] = img_f[j][l] * k[band_index] + d[band_index]
     return img_f
 
+def AddHaze_230306(img, band_index, conv_center_value=0.8):
+    '''影像加雾 230306
+    在addHaze_1209的基础上进一步加入卷积处理，模拟散射效应
+    Args:
+        img: 原始影像，值域[0,255]
+
+    Returns:
+        img_f: 加雾后的影像，值域[0,255]
+
+    Raises:
+        无
+    '''
+    (row, col) = img.shape
+
+    A = np.random.uniform(0.36, 0.38)
+
+    k = [0.43398, 0.45639, 0.46805, 0.47429, 0.47367, 0.39296, 0.30265, 0.30694]
+    d = [37.19871505722094, 39.78363484424905, 41.03992916964764, 42.94155162277795, 44.74225866292751, 50.07052805813309, 61.02356188231779, 51.23899501134923]
+
+    # kernel = np.array([[0.01, 0.01, 0.01], [0.01, 0.91, 0.01], [0.01, 0.01, 0.01]])
+
+    center_weight = conv_center_value  # 中心点的权重
+    neighbour_weight = 1-center_weight
+
+    kernel = np.array([[1/8, 1/5, 1/4, 1/5, 1/8], [1/5, 1/2, 1, 1/2, 1/5], [1/4, 1, 0, 1, 1/4], [1/5, 1/2, 1, 1/2, 1/5], [1/8, 1/5, 1/4, 1/5, 1/8]])
+    kernel_sum = np.sum(kernel)
+    kernel = kernel/kernel_sum
+    kernel = kernel*neighbour_weight
+    kernel[2][2] = center_weight
+
+
+    # img = np.array(img)
+    # kernel = np.array(kernel)
+    img = convolve2d(img, kernel, mode='same')
+
+    img_f = img
+
+    for j in range(row):
+        for l in range(col):          
+            img_f[j][l] = img_f[j][l] * k[band_index] + d[band_index]
+    return img_f
+
+
 def AddHaze2(img):
     '''简化版的影像加雾
     Args:
@@ -235,7 +279,7 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
             perlin_noise = perlin_array(shape=(im_height, im_width), scale=200,
                                             octaves=6, persistence=0.5, lacunarity=2.0, seed=seed)
             # tmp = AddHaze(tmp, perlin_noise)
-            tmp = AddHaze_1209(tmp, i)
+            tmp = AddHaze_230306(tmp, i, conv_center_value=0.8)
 
         new_dataset.GetRasterBand(i + 1).WriteArray(tmp)
 
@@ -244,16 +288,20 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
 
 images_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-clip_img'  # 原始影像路径 栅格
 label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-raster_label'  # 标签影像路径 栅格
-save_img_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_img_addhaze_1209'  # 保存增强后影像路径
-save_label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_label_addhaze_1209'  # 保存增强后标签路径
+save_img_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_img\0-enhance_img_add_haze_FIL_5x5_0.8_rate_0.5_230309'  # 保存增强后影像路径
+save_label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_label\0-enhance_label_add_haze_FIL_5x5_0.8_rate_0.5_230309'  # 保存增强后标签路径
 
 expandNum = 8  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
 randomCorpSize = 256  # 随机裁剪后的样本大小
 img_edge_width = 512  # 输入影像的大小
-add_haze_rate = 0.6  # 加雾的图像比例
+add_haze_rate = 0.5  # 加雾的图像比例
 
 max_thread = randomCorpSize / img_edge_width
-print(max_thread)
+
+if not os.path.exists(save_img_path):
+    os.mkdir(save_img_path)
+if not os.path.exists(save_label_path):
+    os.mkdir(save_label_path)
 
 image_list = fnmatch.filter(os.listdir(images_path), '*.tif')  # 过滤出tif文件
 
@@ -277,12 +325,12 @@ for img_name in tqdm(image_list):
         p1 = np.random.uniform(0, 1-max_thread)
         p2 = np.random.uniform(0, 1-max_thread)
 
-        print(p1, p2)
+        # print(p1, p2)
 
         start_x = int(p1 * img_edge_width)
         start_y = int(p2 * img_edge_width)
 
-        print('start x y: ', start_x, start_y)
+        # print('start x y: ', start_x, start_y)
 
         new_sr_img = sr_img[start_x:start_x + randomCorpSize,
                             start_y:start_y + randomCorpSize, :]

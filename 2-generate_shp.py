@@ -26,8 +26,8 @@ os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\G
 gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8","NO") #路径支持中文
 gdal.SetConfigOption("SHAPE_ENCODING","") #属性表支持中文
 
-image_path = r'E:\projict_UAV_yunnan\1-clip_img_neg' #存储样本影像的文件夹
-save_path = r'E:\projict_UAV_yunnan\1-artificial_shp_neg' #输出的矢量文件夹
+image_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-clip_haze_img' #存储样本影像的文件夹
+save_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-artificial_shp_haze' #输出的矢量文件夹
 
 ogr.RegisterAll()# 注册所有的驱动
 

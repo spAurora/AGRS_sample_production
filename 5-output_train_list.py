@@ -13,9 +13,9 @@ Aerospace Information Research Institute, Chinese Academy of Sciences
 import fnmatch
 import os
 
-traintxt_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-trainlist\0-trainlist_add_haze_FIL_5x5_0.8_rate_0.5_230309.txt' #输出栅格样本列表文件路径
-image_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_img\0-enhance_img_add_haze_FIL_5x5_0.8_rate_0.5_230309' #存储样本影像的文件夹路径
-label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_label\0-enhance_label_add_haze_FIL_5x5_0.8_rate_0.5_230309' #存储栅格标签的文件夹路径
+traintxt_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-trainlist\0-trainlist_add_haze_para_test_230326.txt' #输出栅格样本列表文件路径
+image_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_img\0-enhance_img_add_haze_para_test_230326' #存储样本影像的文件夹路径
+label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_label\0-enhance_label_add_haze_para_test_230326' #存储栅格标签的文件夹路径
 
 img_data_tpye = '*.tif'
 label_data_type = '*.tif'

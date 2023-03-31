@@ -139,7 +139,7 @@ def AddHaze_1209(img, band_index):
             img_f[j][l] = img_f[j][l] * k[band_index] + d[band_index]
     return img_f
 
-def AddHaze_230306(img, band_index, conv_center_value=0.8):
+def AddHaze_230306(img, band_index):
     '''影像加雾 230306
     在addHaze_1209的基础上进一步加入卷积处理，模拟散射效应
     Args:
@@ -153,14 +153,13 @@ def AddHaze_230306(img, band_index, conv_center_value=0.8):
     '''
     (row, col) = img.shape
 
-    A = np.random.uniform(0.36, 0.38)
-
-    k = [0.43398, 0.45639, 0.46805, 0.47429, 0.47367, 0.39296, 0.30265, 0.30694]
-    d = [37.19871505722094, 39.78363484424905, 41.03992916964764, 42.94155162277795, 44.74225866292751, 50.07052805813309, 61.02356188231779, 51.23899501134923]
+    k = [0.47, 0.47, 0.47, 0.47, 0.48, 0.39, 0.33, 0.31]
+    conv_w_list = [0, 0, 0, 0, 0, 0, 0, 0]
+    d = [36, 40, 42, 44, 46, 51, 60, 52]
 
     # kernel = np.array([[0.01, 0.01, 0.01], [0.01, 0.91, 0.01], [0.01, 0.01, 0.01]])
 
-    center_weight = conv_center_value  # 中心点的权重
+    center_weight = conv_w_list[band_index]  # 中心点的权重
     neighbour_weight = 1-center_weight
 
     kernel = np.array([[1/8, 1/5, 1/4, 1/5, 1/8], [1/5, 1/2, 1, 1/2, 1/5], [1/4, 1, 0, 1, 1/4], [1/5, 1/2, 1, 1/2, 1/5], [1/8, 1/5, 1/4, 1/5, 1/8]])
@@ -279,7 +278,7 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
             perlin_noise = perlin_array(shape=(im_height, im_width), scale=200,
                                             octaves=6, persistence=0.5, lacunarity=2.0, seed=seed)
             # tmp = AddHaze(tmp, perlin_noise)
-            tmp = AddHaze_230306(tmp, i, conv_center_value=0.8)
+            tmp = AddHaze_230306(tmp, i)
 
         new_dataset.GetRasterBand(i + 1).WriteArray(tmp)
 
@@ -288,8 +287,8 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
 
 images_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-clip_img'  # 原始影像路径 栅格
 label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-raster_label'  # 标签影像路径 栅格
-save_img_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_img\0-enhance_img_add_haze_FIL_5x5_0.8_rate_0.5_230309'  # 保存增强后影像路径
-save_label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_label\0-enhance_label_add_haze_FIL_5x5_0.8_rate_0.5_230309'  # 保存增强后标签路径
+save_img_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_img\0-enhance_img_add_haze_para_test_230326'  # 保存增强后影像路径
+save_label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_label\0-enhance_label_add_haze_para_test_230326'  # 保存增强后标签路径
 
 expandNum = 8  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
 randomCorpSize = 256  # 随机裁剪后的样本大小

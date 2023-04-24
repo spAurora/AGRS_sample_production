@@ -149,7 +149,7 @@ def read_img(sr_img):
 
     """
     im_dataset = gdal.Open(sr_img)
-    if im_dataset == None:
+    if im_dataset is None:
         print('open sr_img false')
         sys.exit(1)
     im_geotrans = im_dataset.GetGeoTransform()
@@ -189,7 +189,6 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
     new_dataset = driver.Create(
         out_path, im_width, im_height, im_bands, datatype)
     
-
     discrete_list = [4, 6, 8, 10, 12, 14] 
 
     seed = np.random.randint(1, 100)  # 柏林噪声种子
@@ -266,7 +265,6 @@ for img_name in tqdm(image_list):
 
         start_x = int(p1 * img_edge_width)
         start_y = int(p2 * img_edge_width)
-
 
         new_sr_img = sr_img[start_x:start_x + randomCorpSize,
                             start_y:start_y + randomCorpSize, :]

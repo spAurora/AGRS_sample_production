@@ -21,8 +21,25 @@ from noise import pnoise2, snoise2
 import math
 from scipy.signal import convolve2d
 
+def AddHaze_ATSC(img, band_index):
+    '''
+       原始线性大气散射模型，该方法全部置conv_w=0
+       k和d通过暴力搜索得到
+    '''
+    (row, col) = img.shape
 
-def perlin_array(shape=(200, 200),
+    k = [0.511, 0.526, 0.519, 0.514, 0.505, 0.346, 0.298, 0.276]
+    d = [34.4, 37.9, 40.2, 42.4, 44.8, 53.2, 62.7, 54.5]
+
+    for j in range(row):
+        for l in range(col):          
+            img[j][l] = img[j][l] * k[band_index] + d[band_index]
+
+    data_output = np.round(img).astype(np.uint8)
+
+    return data_output
+
+def perlin_array(shape=(256, 256),
                  scale=100, octaves=6,
                  persistence=0.5,
                  lacunarity=2.0,
@@ -49,9 +66,8 @@ def perlin_array(shape=(200, 200),
     '''
 
     if not seed:
-
         seed = np.random.randint(0, 100)
-        #print("seed was {}".format(seed))
+        print("seed was {}".format(seed))
 
     arr = np.zeros(shape)
     for i in range(shape[0]):
@@ -76,128 +92,54 @@ def perlin_array(shape=(200, 200),
     arr = norm_me(arr)
     return arr
 
-
-def AddHaze(img, perlin):
+def AddHaze_ATSC_convw_perlin(img, band_index, apply_conv = True, apply_perlin = True, seed = None, dis_rate=6):
     '''影像加雾
-    Args:
-        img: 原始影像，值域[0,255]
-        perlin: 柏林噪声矩阵, 值域[0,1]，尺寸与影像相同
-
-    Returns:
-        img_f: 加雾后的影像，值域[0,255]
-
-    Raises:
-        无
-    '''
-    img_f = img / 255.0
-    (row, col) = img.shape
-
-    # A = 0.37  # 定值亮度
-    A = np.random.uniform(0.36, 0.38)
-    beta = 0.06  # 雾的浓度
-
-    norm = [0.9, 1]
-
-
-    size = math.sqrt(max(row, col))  # 雾化尺寸
-    #size = max(row, col)
-    center = (row // 2, col // 2)  # 雾化中心
-    for j in range(row):
-        for l in range(col):
-            # 以路径模拟云厚度
-            # d = -0.04 * \
-            #     math.sqrt((j - center[0]) ** 2 + (l - center[1]) ** 2) + size
-            d = 5
-            
-            td = math.exp(-beta * (norm[0] + perlin[j][l]*(norm[1]-norm[0])) * d)
-            img_f[j][l] = img_f[j][l] * td + A * (1 - td)
-    return img_f * 255
-
-def AddHaze_1209(img, band_index):
-    '''影像加雾 1209
-    大气散射模型+真值反演参数
-    二元一次函数简化的大气散射模型
-    Args:
-        img: 原始影像，值域[0,255]
-
-    Returns:
-        img_f: 加雾后的影像，值域[0,255]
-
-    Raises:
-        无
-    '''
-    img_f = img
-    (row, col) = img.shape
-
-    A = np.random.uniform(0.36, 0.38)
-
-    k = [0.43398, 0.45639, 0.46805, 0.47429, 0.47367, 0.39296, 0.30265, 0.30694]
-    d = [37.19871505722094, 39.78363484424905, 41.03992916964764, 42.94155162277795, 44.74225866292751, 50.07052805813309, 61.02356188231779, 51.23899501134923]
-
-    for j in range(row):
-        for l in range(col):          
-            img_f[j][l] = img_f[j][l] * k[band_index] + d[band_index]
-    return img_f
-
-def AddHaze_230306(img, band_index):
-    '''影像加雾 230306
-    在addHaze_1209的基础上进一步加入卷积处理，模拟散射效应
-    Args:
-        img: 原始影像，值域[0,255]
-
-    Returns:
-        img_f: 加雾后的影像，值域[0,255]
-
-    Raises:
-        无
+       大气散射模型
+       柏林噪声和遥感交叉辐射作为自由项
     '''
     (row, col) = img.shape
 
-    k = [0.47, 0.47, 0.47, 0.47, 0.48, 0.39, 0.33, 0.31]
-    conv_w_list = [0, 0, 0, 0, 0, 0, 0, 0]
-    d = [36, 40, 42, 44, 46, 51, 60, 52]
+    k = [0.448, 0.671, 0.605, 0.507, 0.603, 0.233, 0.265, 0.241]
+    d = [45.9, 41, 46.1, 55.7, 53.6, 66.3, 64.8, 57.8]
+    conv_w_list = [0, 0, 0, 0, 0, 0.024, 0.032, 0.264]
+    
+    if not apply_conv: # 如果不开启交叉辐射则conv_w全部重置为0
+        conv_w_list = [0, 0, 0, 0, 0, 0, 0, 0] 
 
-    # kernel = np.array([[0.01, 0.01, 0.01], [0.01, 0.91, 0.01], [0.01, 0.01, 0.01]])
-
-    center_weight = conv_w_list[band_index]  # 中心点的权重
-    neighbour_weight = 1-center_weight
+    neighbour_weight = conv_w_list[band_index]
 
     kernel = np.array([[1/8, 1/5, 1/4, 1/5, 1/8], [1/5, 1/2, 1, 1/2, 1/5], [1/4, 1, 0, 1, 1/4], [1/5, 1/2, 1, 1/2, 1/5], [1/8, 1/5, 1/4, 1/5, 1/8]])
     kernel_sum = np.sum(kernel)
     kernel = kernel/kernel_sum
     kernel = kernel*neighbour_weight
-    kernel[2][2] = center_weight
+    kernel[2][2] = 1-neighbour_weight
 
-
-    # img = np.array(img)
-    # kernel = np.array(kernel)
     img = convolve2d(img, kernel, mode='same')
-
-    img_f = img
 
     for j in range(row):
         for l in range(col):          
-            img_f[j][l] = img_f[j][l] * k[band_index] + d[band_index]
-    return img_f
+            img[j][l] = img[j][l] * k[band_index] + d[band_index]
 
+    if apply_perlin: # 如果应用柏林噪声
+        '''以下为柏林噪声相关参数'''
+        ###########################
+        scale = 40
+        octaves = 8
+        persistence = 0.5
+        lacunarity = 2.0
+        rate = dis_rate
+        ###########################
+        perlin = perlin_array(shape=(row, col), scale=scale,
+                    octaves=octaves, persistence=persistence, lacunarity=lacunarity, seed=seed) # 定义柏林噪声矩阵
 
-def AddHaze2(img):
-    '''简化版的影像加雾
-    Args:
-        img: 原始影像，值域[0,255]
+        perlin_dis = (perlin*rate)-(rate/2)
+        perlin_dis = np.round(perlin_dis).astype('int8')
 
-    Returns:
-        img_f: 加雾后的影像，值域[0,255]
+        img = img + perlin_dis # 将柏林噪声叠加到卷积计算后的图像上
 
-    Raises:
-        无
-    '''
-    img_h = img / 255.0  
-    A = np.random.uniform(0.9, 1)
-    t = np.random.uniform(0.3, 0.9)
-    img_h = img_h*t + A*(1-t)
+    data_output = np.round(img).astype(np.uint8)
 
-    return img_h*255
+    return data_output
 
 def read_img(sr_img):
     """read img
@@ -230,8 +172,6 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
         im_data: Output image data
 
     """
-    # 生成随机种子
-    seed = np.random.randint(0, 100)
     # identify data type
     if mode == 0:
         datatype = gdal.GDT_Byte
@@ -248,6 +188,12 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
     driver = gdal.GetDriverByName("GTiff")
     new_dataset = driver.Create(
         out_path, im_width, im_height, im_bands, datatype)
+    
+
+    discrete_list = [4, 6, 8, 10, 12, 14] 
+
+    seed = np.random.randint(1, 100)  # 柏林噪声种子
+    seed_dis = np.random.randint(0, len(discrete_list)) # 离散程度种子
 
     for i in range(im_bands):
         if mode == 0:
@@ -275,25 +221,22 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
 
         '''加云'''
         if addHaze == True:
-            perlin_noise = perlin_array(shape=(im_height, im_width), scale=200,
-                                            octaves=6, persistence=0.5, lacunarity=2.0, seed=seed)
-            # tmp = AddHaze(tmp, perlin_noise)
-            tmp = AddHaze_230306(tmp, i)
+            tmp = AddHaze_ATSC_convw_perlin(tmp, i, apply_conv=True, apply_perlin=True, seed=seed, dis_rate=discrete_list[seed_dis]) # 在这里替换模拟云算法
 
         new_dataset.GetRasterBand(i + 1).WriteArray(tmp)
 
     del new_dataset
 
 
-images_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-clip_img'  # 原始影像路径 栅格
-label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-raster_label'  # 标签影像路径 栅格
-save_img_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_img\0-enhance_img_add_haze_para_test_230326'  # 保存增强后影像路径
-save_label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_label\0-enhance_label_add_haze_para_test_230326'  # 保存增强后标签路径
+images_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-clip_img\1-clip_img_clear'  # 原始影像路径 栅格
+label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-raster_label\1-raster_label_clear'  # 标签影像路径 栅格
+save_img_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_img\3-enhance_img_clear_mix_sim_haze_ATSC+convw+pn_LV3_rate_0.3_230424'  # 保存增强后影像路径
+save_label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_label\3-enhance_label_clear_mix_sim_haze_ATSC+convw+pn_LV3_rate_0.3_230424'  # 保存增强后标签路径
 
-expandNum = 8  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
+expandNum = 10  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
 randomCorpSize = 256  # 随机裁剪后的样本大小
 img_edge_width = 512  # 输入影像的大小
-add_haze_rate = 0.5  # 加雾的图像比例
+add_haze_rate = 0.3  # 加雾的图像比例
 
 max_thread = randomCorpSize / img_edge_width
 
@@ -317,19 +260,13 @@ for img_name in tqdm(image_list):
     '''样本扩增'''
     cnt = 0
     for i in range(expandNum):
-
-        # p1 = np.random.choice([0, max_thread])  # 最大height比例
-        # p2 = np.random.choice([0, max_thread])  # 最大width比例 巨大bug
         
         p1 = np.random.uniform(0, 1-max_thread)
         p2 = np.random.uniform(0, 1-max_thread)
 
-        # print(p1, p2)
-
         start_x = int(p1 * img_edge_width)
         start_y = int(p2 * img_edge_width)
 
-        # print('start x y: ', start_x, start_y)
 
         new_sr_img = sr_img[start_x:start_x + randomCorpSize,
                             start_y:start_y + randomCorpSize, :]

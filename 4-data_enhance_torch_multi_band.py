@@ -28,8 +28,8 @@ def AddHaze_ATSC(img, band_index):
     '''
     (row, col) = img.shape
 
-    k = [0.511, 0.526, 0.519, 0.514, 0.505, 0.346, 0.298, 0.276]
-    d = [34.4, 37.9, 40.2, 42.4, 44.8, 53.2, 62.7, 54.5]
+    k = [0.448, 0.671, 0.605, 0.507, 0.603, 0.233, 0.265, 0.241]
+    d = [45.9, 41, 46.1, 55.7, 53.6, 66.3, 64.8, 57.8]
 
     for j in range(row):
         for l in range(col):          
@@ -99,10 +99,10 @@ def AddHaze_ATSC_convw_perlin(img, band_index, apply_conv = True, apply_perlin =
     '''
     (row, col) = img.shape
 
-    k = [0.448, 0.671, 0.605, 0.507, 0.603, 0.233, 0.265, 0.241]
-    d = [45.9, 41, 46.1, 55.7, 53.6, 66.3, 64.8, 57.8]
-    conv_w_list = [0, 0, 0, 0, 0, 0.024, 0.032, 0.264]
-    
+    k = [0.511, 0.526, 0.519, 0.514, 0.505, 0.346, 0.298, 0.276]
+    d = [34.4, 37.9, 40.2, 42.4, 44.8, 53.2, 62.7, 54.5] 
+    conv_w_list = [0.075, 0.015, 0, 0.038, 0, 0, 0.02, 0.019]
+
     if not apply_conv: # 如果不开启交叉辐射则conv_w全部重置为0
         conv_w_list = [0, 0, 0, 0, 0, 0, 0, 0] 
 
@@ -123,7 +123,7 @@ def AddHaze_ATSC_convw_perlin(img, band_index, apply_conv = True, apply_perlin =
     if apply_perlin: # 如果应用柏林噪声
         '''以下为柏林噪声相关参数'''
         ###########################
-        scale = 40
+        scale = 60
         octaves = 8
         persistence = 0.5
         lacunarity = 2.0
@@ -221,6 +221,7 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
         '''加云'''
         if addHaze == True:
             tmp = AddHaze_ATSC_convw_perlin(tmp, i, apply_conv=True, apply_perlin=True, seed=seed, dis_rate=discrete_list[seed_dis]) # 在这里替换模拟云算法
+            # tmp = AddHaze_ATSC(tmp, i)
 
         new_dataset.GetRasterBand(i + 1).WriteArray(tmp)
 
@@ -229,13 +230,13 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
 
 images_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-clip_img\1-clip_img_clear'  # 原始影像路径 栅格
 label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-raster_label\1-raster_label_clear'  # 标签影像路径 栅格
-save_img_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_img\3-enhance_img_clear_mix_sim_haze_ATSC+convw+pn_LV3_rate_0.3_230424'  # 保存增强后影像路径
-save_label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_label\3-enhance_label_clear_mix_sim_haze_ATSC+convw+pn_LV3_rate_0.3_230424'  # 保存增强后标签路径
+save_img_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_img\5-enhance_img_clear_mix_sim_haze_ATSC+convw+perlin_LV2_rate_0.2_5_230502'  # 保存增强后影像路径
+save_label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_label\5-enhance_label_clear_mix_sim_haze_ATSC+convw+perlin_LV2_rate_0.2_5_230502'  # 保存增强后标签路径
 
 expandNum = 10  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
 randomCorpSize = 256  # 随机裁剪后的样本大小
 img_edge_width = 512  # 输入影像的大小
-add_haze_rate = 0.3  # 加雾的图像比例
+add_haze_rate = 0.2  # 加雾的图像比例
 
 max_thread = randomCorpSize / img_edge_width
 

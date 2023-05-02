@@ -136,11 +136,11 @@ def clip(out_tif_name, sr_img, point_shp, cut_cnt):
 os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data'
 
 sr_image_path = r"E:\xinjiang_huyang_hongliu\WV_GF_Tarim\WV2_dealed\Talimu_dealed" #原始影像
-point_shp = r"C:\Users\75198\OneDrive\论文\SCI-3-3 Remote sensing data augmentation\图片\2-模拟云展示图\用来模拟的清晰影像\clear_img_for_sim_vis.shp" #中心点point文件
-out_path = r"C:\Users\75198\OneDrive\论文\SCI-3-3 Remote sensing data augmentation\图片\2-模拟云展示图\用来模拟的清晰影像" #输出目标文件夹
-datasize = 384 #输出的影像大小（像素）
+point_shp = r"E:\xinjiang_huyang_hongliu\Huyang_test_0808\0-other_data\haze1_points_for_show.shp" #中心点point文件
+out_path = r"C:\Users\75198\OneDrive\论文\SCI-3-3 Remote sensing data augmentation\图片\7-预测结果展示图\待预测原始影像\8波段" #输出目标文件夹
+datasize = 256 #输出的影像大小（像素）
 img_type = '*.dat' #原始影像类型 不可漏*.
-output_prefix = 'Clear_scene' #输出小块影像文件名的前缀
+output_prefix = 'haze1_for_predict_show' #输出小块影像文件名的前缀
 
 if not os.path.exists(out_path):
     os.mkdir(out_path)

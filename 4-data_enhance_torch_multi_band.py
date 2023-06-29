@@ -103,6 +103,10 @@ def AddHaze_ATSC_convw_perlin(img, band_index, apply_conv = True, apply_perlin =
     d = [34.4, 37.9, 40.2, 42.4, 44.8, 53.2, 62.7, 54.5] 
     conv_w_list = [0.075, 0.015, 0, 0.038, 0, 0, 0.02, 0.019]
 
+    convw_expand_rate = 2
+    for i in range(len(conv_w_list)):
+        conv_w_list[i] *= convw_expand_rate
+
     if not apply_conv: # 如果不开启交叉辐射则conv_w全部重置为0
         conv_w_list = [0, 0, 0, 0, 0, 0, 0, 0] 
 
@@ -230,8 +234,8 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
 
 images_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-clip_img\1-clip_img_clear'  # 原始影像路径 栅格
 label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-raster_label\1-raster_label_clear'  # 标签影像路径 栅格
-save_img_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_img\5-enhance_img_clear_mix_sim_haze_ATSC+convw+perlin_LV2_rate_0.2_5_230502'  # 保存增强后影像路径
-save_label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_label\5-enhance_label_clear_mix_sim_haze_ATSC+convw+perlin_LV2_rate_0.2_5_230502'  # 保存增强后标签路径
+save_img_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_img\7-enhance_img_clear_mix_sim_haze_ATSC_LV2_convw_expand_rate_2_5_230515'  # 保存增强后影像路径
+save_label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_label\7-enhance_label_clear_mix_sim_haze_ATSC_LV2_convw_expand_rate_2_5_230515'  # 保存增强后标签路径
 
 expandNum = 10  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
 randomCorpSize = 256  # 随机裁剪后的样本大小
@@ -259,7 +263,7 @@ for img_name in tqdm(image_list):
 
     '''样本扩增'''
     cnt = 0
-    for i in range(expandNum):
+    for i in range(expandNum): 
         
         p1 = np.random.uniform(0, 1-max_thread)
         p2 = np.random.uniform(0, 1-max_thread)
@@ -279,11 +283,11 @@ for img_name in tqdm(image_list):
             save_label_full_path = save_label_path + '/' + \
                 img_name[0:-4] + '_' + str(cnt) + '.tif'
             cnt += 1
-            l = np.random.uniform(0, 1)
-            if l > add_haze_rate:
+            l = np.random.uniform(0, 1) # 生成随机数
+            if l > add_haze_rate: # 判断随机数是否大于一个比例
                 addHaze = False
             else:
-                addHaze = True
+                addHaze = True # 添加模拟云
                 print(i, cnt)
             write_img(save_img_full_path, new_sr_img,
                       mode=1, rotate=j, addHaze=addHaze)

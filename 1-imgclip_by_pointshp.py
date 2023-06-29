@@ -135,12 +135,12 @@ def clip(out_tif_name, sr_img, point_shp, cut_cnt):
 # 防止GDAL报ERROR4错误 gdal_gata文件夹需要相应配置
 os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data'
 
-sr_image_path = r"E:\xinjiang_huyang_hongliu\WV_GF_Tarim\WV2_dealed\Talimu_dealed" #原始影像
-point_shp = r"E:\xinjiang_huyang_hongliu\Huyang_test_0808\0-other_data\haze1_points_for_show.shp" #中心点point文件
-out_path = r"C:\Users\75198\OneDrive\论文\SCI-3-3 Remote sensing data augmentation\图片\7-预测结果展示图\待预测原始影像\8波段" #输出目标文件夹
-datasize = 256 #输出的影像大小（像素）
-img_type = '*.dat' #原始影像类型 不可漏*.
-output_prefix = 'haze1_for_predict_show' #输出小块影像文件名的前缀
+sr_image_path = r"E:\project_wafang\0-srimg" #原始影像
+point_shp = r"E:\project_wafang\0-other_data\sample_points_zyh.shp" #中心点point文件
+out_path = r"E:\project_wafang\1-clip_img" #输出目标文件夹
+datasize = 1500 #输出的影像大小（像素）
+img_type = '*.tif' #原始影像类型 不可漏*.
+output_prefix = 'wafangdian_zyh' #输出小块影像文件名的前缀
 
 if not os.path.exists(out_path):
     os.mkdir(out_path)

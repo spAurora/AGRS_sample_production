@@ -26,6 +26,9 @@ save_path = r'E:\projict_UAV_yunnan\1-raster_label_neg' #输出的矢量转栅�
 background_value = 0 #栅格化后背景值
 foreground_value = 255 #栅格化后前景值
 
+if not os.path.exists(save_path):
+    os.mkdir(save_path)
+
 img_list = fnmatch.filter(os.listdir(image_path), '*.tif') # 过滤出所有tif文件
 
 for img_file in img_list:

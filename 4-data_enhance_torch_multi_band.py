@@ -232,15 +232,15 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
     del new_dataset
 
 
-images_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-clip_img\1-clip_img_clear'  # 原始影像路径 栅格
-label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\1-raster_label\1-raster_label_clear'  # 标签影像路径 栅格
-save_img_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_img\7-enhance_img_clear_mix_sim_haze_ATSC_LV2_convw_expand_rate_2_5_230515'  # 保存增强后影像路径
-save_label_path = r'E:\xinjiang_huyang_hongliu\Huyang_test_0808\2-enhance_label\7-enhance_label_clear_mix_sim_haze_ATSC_LV2_convw_expand_rate_2_5_230515'  # 保存增强后标签路径
+images_path = r'E:\project_TIM\1-clip_img'  # 原始影像路径 栅格
+label_path = r'E:\project_TIM\1-raster_label'  # 标签影像路径 栅格
+save_img_path = r'E:\project_TIM\2-enhance_img'  # 保存增强后影像路径
+save_label_path = r'E:\project_TIM\2-enhance_label'  # 保存增强后标签路径
 
-expandNum = 10  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
-randomCorpSize = 256  # 随机裁剪后的样本大小
-img_edge_width = 512  # 输入影像的大小
-add_haze_rate = 0.2  # 加雾的图像比例
+expandNum = 2  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
+randomCorpSize = 768  # 随机裁剪后的样本大小
+img_edge_width = 1000  # 输入影像的大小
+add_haze_rate = 0  # 加雾的图像比例
 
 max_thread = randomCorpSize / img_edge_width
 

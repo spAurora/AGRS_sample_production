@@ -26,11 +26,20 @@ os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\G
 gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8","NO") #路径支持中文
 gdal.SetConfigOption("SHAPE_ENCODING","") #属性表支持中文
 
-image_path = r'E:\project_wafang\1-clip_img' #存储样本影像的文件夹
-save_path = r'E:\project_wafang\1-artificial_shp' #输出的矢量文件夹
+image_path = r'E:\project_TIM\1-clip_img' #存储样本影像的文件夹
+save_path = r'E:\project_TIM\1-artificial_shp' #输出的矢量文件夹
 
 if not os.path.exists(save_path):
     os.mkdir(save_path)
+
+# 获取文件夹中的所有文件和子文件夹
+items = os.listdir(save_path)
+
+if not items:
+    print('continue...')
+else:
+    print('请确保储存文件夹为空')
+    exit(-1)
 
 ogr.RegisterAll()# 注册所有的驱动
 

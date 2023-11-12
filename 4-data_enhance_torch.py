@@ -77,13 +77,13 @@ def label_colormap(n_label=5):
         )
         return cmap
 
-images_path = r'E:\project_yu\1-clip_img' #原始影像路径 栅格
-label_path = r'E:\project_yu\1-raster_label' #标签影像路径 栅格
-save_img_path = r'E:\project_yu\2-enhance_img' #保存增强后影像路径
-save_label_path = r'E:\project_yu\2-enhance_label' #保存增强后标签路径
+images_path = r'E:\xinjiang_parcel\1-clip_img' #原始影像路径 栅格
+label_path = r'E:\xinjiang_parcel\1-raster_label_line' #标签影像路径 栅格
+save_img_path = r'E:\xinjiang_parcel\2-enhance_img' #保存增强后影像路径
+save_label_path = r'E:\xinjiang_parcel\2-enhance_label' #保存增强后标签路径
 
-expandNum = 32 #每个样本的扩充数目
-randomCorpSize = 192 #随机裁剪后的样本大小
+expandNum = 128 #每个样本的扩充数目
+randomCorpSize = 256 #随机裁剪后的样本大小
 randomColorChangeRange = 0.03 #随机色彩变换范围 0~1，越大变化越强 #仅针对3波段影像
 ifGIDDataset = False
 GIDdatasetClassNum = 8
@@ -93,12 +93,12 @@ if not os.path.exists(save_img_path):
 if not os.path.exists(save_label_path):
     os.mkdir(save_label_path)
 
-image_list = fnmatch.filter(os.listdir(images_path), '*.png')  # 文件类型过滤
+image_list = fnmatch.filter(os.listdir(images_path), '*.tif')  # 文件类型过滤
 
 for img_name in tqdm(image_list):
 
     img_full_path = os.path.join(images_path + '/' + img_name)
-    label_full_path = os.path.join(label_path + '/' + img_name[0:-4] + '.png')
+    label_full_path = os.path.join(label_path + '/' + img_name[0:-4] + '.tif')
 
     '''读取img和label数据'''
     sr_img = Image.open(img_full_path)

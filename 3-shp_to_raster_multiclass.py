@@ -22,10 +22,10 @@ import ogr
 
 os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data' #防止报error4错误
 
-image_path = r'E:\project_TIM\1-clip_img' #存储样本影像的文件夹
-line_path = r'E:\project_TIM\1-artificial_shp' #存储人工勾画矢量的文件夹
-save_path = r'E:\project_TIM\1-raster_label' #输出的矢量转栅格样本文件夹
-num_classes = 2 #类别数 不包含背景0
+image_path = r'E:\DOM分类标签数据\1-clip_img' #存储样本影像的文件夹
+label_path = r'E:\DOM分类标签数据\1_打标签数据(未切片)\label\DW53toEA48_label.shp' #存储人工勾画矢量的文件夹
+save_path = r'E:\DOM分类标签数据\1-raster_label' #输出的矢量转栅格样本文件夹
+class_num = 9 #类别数 不包含背景0
 
 if not os.path.exists(save_path):
     os.mkdir(save_path)
@@ -37,9 +37,10 @@ for img_file in img_list:
     '''预处理'''
     data = []
     image_file = os.path.join(image_path + '/' + img_file)
-    line_file = os.path.join(line_path + '/' + img_file[0:-4] + '_label.shp')
-    outraster_file = os.path.join(save_path + '/' + img_file[0:-4] + '.tif')
-    if os.path.exists(line_file) == False: # shp文件不存在跳过
+    label_file = os.path.join(label_path + '/' + img_file[0:-4] + '_label.shp')
+    label_file = label_path
+    outRaster_file = os.path.join(save_path + '/' + img_file[0:-4] + '.tif')
+    if os.path.exists(label_file) == False: # shp文件不存在跳过
         print('File not exist: ' + img_file[0:-4] + '_label.shp')
         continue
 
@@ -49,13 +50,13 @@ for img_file in img_list:
     ref = image.GetProjection()
     x_res = image.RasterXSize
     y_res = image.RasterYSize
-    vector = ogr.Open(line_file)
+    vector = ogr.Open(label_file)
     if vector == None:
         print('第二次shp文件失败')
     layer = vector.GetLayer() 
 
     '''逐类别'''
-    for i in range(num_classes):
+    for i in range(class_num):
         focus_label_value = i+1
         tmp_shp_path = 'tmp_' + str(focus_label_value) + '.shp'
         newds = driver.CreateDataSource(tmp_shp_path) 
@@ -114,13 +115,13 @@ for img_file in img_list:
 
     '''保存栅格样本文件'''
     driver = gdal.GetDriverByName("GTiff")
-    ds = driver.Create(outraster_file, image.RasterXSize, image.RasterYSize, 1, gdal.GDT_Byte)
+    ds = driver.Create(outRaster_file, image.RasterXSize, image.RasterYSize, 1, gdal.GDT_Byte)
     ds.SetGeoTransform(geotransform)
     ds.SetProjection(ref)
     ds.GetRasterBand(1).WriteArray(data_out)
     image = None
     ds = None
-    print(outraster_file + ' success')
+    print(outRaster_file + ' success')
 
 os.remove('temp.tif') # 清理tmp_tif文件
 

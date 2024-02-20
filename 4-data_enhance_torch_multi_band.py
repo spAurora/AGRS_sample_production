@@ -161,9 +161,10 @@ def read_img(sr_img):
     im_width = im_dataset.RasterXSize
     im_height = im_dataset.RasterYSize
     im_data = im_dataset.ReadAsArray(0, 0, im_width, im_height)
+    im_bands = im_dataset.RasterCount
     del im_dataset
 
-    return im_data
+    return im_data, im_proj, im_geotrans, im_height, im_width, im_bands
 
 
 def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
@@ -232,15 +233,15 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
     del new_dataset
 
 
-images_path = r'E:\project_TIM\1-clip_img'  # 原始影像路径 栅格
-label_path = r'E:\project_TIM\1-raster_label'  # 标签影像路径 栅格
-save_img_path = r'E:\project_TIM\2-enhance_img'  # 保存增强后影像路径
-save_label_path = r'E:\project_TIM\2-enhance_label'  # 保存增强后标签路径
+images_path = r'E:\project_TIM\1-clip_img_addHeight'  # 原始影像路径 栅格
+label_path = r'E:\project_TIM\1-raster_label_addHeight'  # 标签影像路径 栅格
+save_img_path = r'E:\project_TIM\2-enhance_img_addHeight'  # 保存增强后影像路径
+save_label_path = r'E:\project_TIM\2-enhance_label_addHeight'  # 保存增强后标签路径
 
-expandNum = 2  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
-randomCorpSize = 768  # 随机裁剪后的样本大小
+expandNum = 4  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
+randomCorpSize = 512  # 随机裁剪后的样本大小
 img_edge_width = 1000  # 输入影像的大小
-add_haze_rate = 0  # 加雾的图像比例
+add_haze_rate = 0.2  # 加雾的图像比例
 
 max_thread = randomCorpSize / img_edge_width
 

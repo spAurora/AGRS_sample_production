@@ -77,14 +77,22 @@ def label_colormap(n_label=5):
         )
         return cmap
 
-images_path = r'E:\xinjiang_parcel\1-clip_img' #原始影像路径 栅格
-label_path = r'E:\xinjiang_parcel\1-raster_label_line' #标签影像路径 栅格
-save_img_path = r'E:\xinjiang_parcel\2-enhance_img' #保存增强后影像路径
-save_label_path = r'E:\xinjiang_parcel\2-enhance_label' #保存增强后标签路径
+if torch.cuda.is_available():
+    print("gpu cuda is available!")
+    torch.cuda.manual_seed(666)
+else:
+    print("cuda is not available! cpu is available!")
+    torch.manual_seed(666)
+np.random.seed(666)
 
-expandNum = 128 #每个样本的扩充数目
-randomCorpSize = 256 #随机裁剪后的样本大小
-randomColorChangeRange = 0.03 #随机色彩变换范围 0~1，越大变化越强 #仅针对3波段影像
+images_path = r'E:\DOM分类标签数据\1-clip_img' #原始影像路径 栅格
+label_path = r'E:\DOM分类标签数据\1-raster_label' #标签影像路径 栅格
+save_img_path = r'E:\DOM分类标签数据\2-enhanced_img' #保存增强后影像路径
+save_label_path = r'E:\DOM分类标签数据\2-enhanced_label' #保存增强后标签路径
+
+expandNum = 24 #每个样本的扩充数目
+randomCorpSize = 768 #随机裁剪后的样本大小
+randomColorChangeRange = 0 #随机色彩变换范围 0~1，越大变化越强 #仅针对3波段影像
 ifGIDDataset = False
 GIDdatasetClassNum = 8
 
@@ -121,7 +129,8 @@ for img_name in tqdm(image_list):
         label_aug = transforms.Compose([transforms.RandomCrop(randomCorpSize),      
                 transforms.RandomHorizontalFlip(p1),
                 transforms.RandomVerticalFlip(p2),
-                transforms.RandomRotation(p3)]) #标签颜色不能变换
+                transforms.RandomRotation(p3)
+                ]) #标签颜色不能变换
 
         torch.manual_seed(i+627)
         new_sr_img = im_aug(sr_img)

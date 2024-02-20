@@ -135,12 +135,12 @@ def clip(out_tif_name, sr_img, point_shp, cut_cnt):
 # 防止GDAL报ERROR4错误 gdal_gata文件夹需要相应配置
 os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data'
 
-sr_image_path = r"E:\project_TIM\0-srimg\pansharpen" #原始影像
-point_shp = r"E:\project_TIM\0-otherdata\sample_point_1112.shp" #中心点point文件
-out_path = r"E:\project_TIM\1-clip_img" #输出目标文件夹
-datasize = 1000 #输出的影像大小（像素）
-img_type = '*.tif' #原始影像类型 不可漏*.
-output_prefix = 'Brussels_LCZ' #输出小块影像文件名的前缀
+sr_image_path = r"E:\IMG_to_WHY\IMAGE_8bit\clip" #原始影像
+point_shp = r"D:\xj_parcel_dataset\231121_xj_farmland_weigan_Sentinel2\point\weigan_add_point.shp" #中心点point文件
+out_path = r"D:\xj_parcel_dataset\231121_xj_farmland_weigan_Sentinel2\1-clip_img" #输出目标文件夹
+datasize = 768 #输出的影像大小（像素）
+img_type = '*.dat' #原始影像类型 不可漏*.
+output_prefix = 'weigan_add' #输出小块影像文件名的前缀
 
 if not os.path.exists(out_path):
     os.mkdir(out_path)

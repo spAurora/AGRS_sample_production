@@ -23,13 +23,10 @@ import ogr
 os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data' #防止报error4错误
 
 image_path = r'F:\project_populus_UAV\1-clip_img\1-pretrain_img_240307' #存储样本影像的文件夹
-label_path = r'F:\project_populus_UAV\1-artificial_shp\1-pretrain_label_240309' #存储人工勾画矢量的文件夹
+line_path = r'F:\project_populus_UAV\1-artificial_shp\1-pretrain_label_240309' #存储人工勾画矢量的文件夹
 save_path = r'F:\project_populus_UAV\1-raster_label\1-pretrain_rasterlabel_240309' #输出的矢量转栅格样本文件夹
+num_classes = 2 #类别数 不包含背景0
 
-class_num = 2 #类别数 不包含背景0
-
-if not os.path.exists(save_path):
-    os.mkdir(save_path)
 
 img_list = fnmatch.filter(os.listdir(image_path), '*.tif') # 过滤出所有tif文件
 
@@ -38,9 +35,9 @@ for img_file in img_list:
     '''预处理'''
     data = []
     image_file = os.path.join(image_path + '/' + img_file)
-    label_file = os.path.join(label_path + '/' + img_file[0:-4] + '_label.shp')
-    outRaster_file = os.path.join(save_path + '/' + img_file[0:-4] + '.tif')
-    if os.path.exists(label_file) == False: # shp文件不存在跳过
+    line_file = os.path.join(line_path + '/' + img_file[0:-4] + '_label.shp')
+    outraster_file = os.path.join(save_path + '/' + img_file[0:-4] + '.tif')
+    if os.path.exists(line_file) == False: # shp文件不存在跳过
         print('File not exist: ' + img_file[0:-4] + '_label.shp')
         continue
 
@@ -50,13 +47,13 @@ for img_file in img_list:
     ref = image.GetProjection()
     x_res = image.RasterXSize
     y_res = image.RasterYSize
-    vector = ogr.Open(label_file)
+    vector = ogr.Open(line_file)
     if vector == None:
         print('第二次shp文件失败')
     layer = vector.GetLayer() 
 
     '''逐类别'''
-    for i in range(class_num):
+    for i in range(num_classes):
         focus_label_value = i+1
         tmp_shp_path = 'tmp_' + str(focus_label_value) + '.shp'
         newds = driver.CreateDataSource(tmp_shp_path) 
@@ -79,7 +76,7 @@ for img_file in img_list:
             f_value = feature.GetField(fieldName) # 获取要素label字段的值
             if (f_value != focus_label_value):
                 f_ID = feature.GetFID()
-                layer_tmp.DeleteFeature(int(f_ID))
+                layer_tmp.DeleteFeature(int(f_ID)) 
             feature = layer_tmp.GetNextFeature()
         
         '''栅格化'''
@@ -115,13 +112,13 @@ for img_file in img_list:
 
     '''保存栅格样本文件'''
     driver = gdal.GetDriverByName("GTiff")
-    ds = driver.Create(outRaster_file, image.RasterXSize, image.RasterYSize, 1, gdal.GDT_Byte)
+    ds = driver.Create(outraster_file, image.RasterXSize, image.RasterYSize, 1, gdal.GDT_Byte)
     ds.SetGeoTransform(geotransform)
     ds.SetProjection(ref)
     ds.GetRasterBand(1).WriteArray(data_out)
     image = None
     ds = None
-    print(outRaster_file + ' success')
+    print(outraster_file + ' success')
 
 os.remove('temp.tif') # 清理tmp_tif文件
 

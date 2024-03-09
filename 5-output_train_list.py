@@ -13,9 +13,9 @@ Aerospace Information Research Institute, Chinese Academy of Sciences
 import fnmatch
 import os
 
-traintxt_path = r'E:\DOM\2-train_list\trainlist_240219.txt' #输出栅格样本列表文件路径
-image_path = r'E:\DOM\2-enhanced_img' #存储样本影像的文件夹路径
-label_path = r'E:\DOM\2-enhanced_label' #存储栅格标签的文件夹路径
+traintxt_path = r'E:\project_populus_UAV\2-train_list\trainlist_pretrain_ds025_240307_1.txt' #输出栅格样本列表文件路径
+image_path = r'E:\project_populus_UAV\2-enhance_img\1-pretrain_enhanceimg_ds025_240307' #存储样本影像的文件夹路径
+label_path = r'E:\project_populus_UAV\2-enhance_label\1-pretrain_enhancelabel_ds025_240307' #存储栅格标签的文件夹路径
 
 img_data_tpye = '*.tif'
 label_data_type = '*.tif'

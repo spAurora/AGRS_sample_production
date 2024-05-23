@@ -20,13 +20,11 @@ import numpy as np
 import gdal
 import ogr
 
-os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data' #防止报error4错误
+image_path = r'E:\project_hami_limuceng\0-srimg' #存储样本影像的文件夹
+label_path = r'E:\project_hami_limuceng\00-哈密空间分析大图\兴趣区' #存储人工勾画矢量的文件夹
+save_path = r'E:\project_hami_limuceng\000-空间分析数据及结果' #输出的矢量转栅格样本文件夹
 
-image_path = r'F:\project_populus_GF7\1-clip_img\test123_clip_img' #存储样本影像的文件夹
-label_path = r'F:\project_populus_GF7\1-artificial_shp\test123_artificial_shp' #存储人工勾画矢量的文件夹
-save_path = r'F:\project_populus_GF7\1-raster_label\test123_raster_label_multiclass' #输出的矢量转栅格样本文件夹
-
-class_num = 2 #类别数 不包含背景0
+class_num = 3 #类别数 不包含背景0
 
 if not os.path.exists(save_path):
     os.mkdir(save_path)
@@ -52,76 +50,22 @@ for img_file in img_list:
     y_res = image.RasterYSize
     vector = ogr.Open(label_file)
     if vector == None:
-        print('第二次shp文件失败')
+        print('读取shp_label文件失败')
     layer = vector.GetLayer() 
-
-    '''逐类别'''
-    for i in range(class_num):
-        focus_label_value = i+1
-        tmp_shp_path = 'tmp_' + str(focus_label_value) + '.shp'
-        newds = driver.CreateDataSource(tmp_shp_path) 
-        newds.CopyLayer(layer, 'wHy')
-        newds.Destroy()
-        vector_copy = ogr.Open(tmp_shp_path, 1) # 读写方式打开
-        layer_tmp = vector_copy.GetLayer()
-        defn_tmp = layer_tmp.GetLayerDefn()
-        fieldIndex = defn_tmp.GetFieldIndex('label')
-        if fieldIndex < 0: # 若label字段不存在则报错
-            print('label字段不存在')
-            sys.exit(1)
-        
-        '''遍历要素并label不等于当前处理类别的要素'''
-        feature = layer_tmp.GetNextFeature()
-        fieldIndex = defn_tmp.GetFieldIndex('label')
-        oField = defn_tmp.GetFieldDefn(fieldIndex)
-        fieldName = oField.GetNameRef()
-        while feature is not None:
-            f_value = feature.GetField(fieldName) # 获取要素label字段的值
-            if (f_value != focus_label_value):
-                f_ID = feature.GetFID()
-                layer_tmp.DeleteFeature(int(f_ID))
-            feature = layer_tmp.GetNextFeature()
-        
-        '''栅格化'''
-        targetDataset = gdal.GetDriverByName('GTiff').Create('temp.tif', x_res, y_res, 3, gdal.GDT_Byte)
-        targetDataset.SetGeoTransform(image.GetGeoTransform())
-        targetDataset.SetProjection(image.GetProjection())
-        band = targetDataset.GetRasterBand(1)
-        band.SetNoDataValue(0)
-        band.FlushCache()
-        gdal.RasterizeLayer(targetDataset, [1], layer_tmp)
-        targetDataset = None
-
-        image_tmp = gdal.Open('temp.tif')
-        data_tmp = image_tmp.GetRasterBand(1).ReadAsArray().astype(np.uint8)
-        data_tmp[np.where(data_tmp > 0)] = focus_label_value
-        data.append(data_tmp)
-
-        '''指针释放'''
-        image_tmp = None
-        vector_copy.Destroy()
-        driver.DeleteDataSource(tmp_shp_path) # 清理tmp_shp文件
-
-    vector.Destroy()
-
-    '''叠置data处理'''
-    data_array = np.array(data)
-    data_shape = np.shape(data_array)
-
-    data_out = np.zeros((int(data_shape[1]), int(data_shape[2])))
-    for i in range(data_shape[1]):
-        for j in range(data_shape[2]):
-            data_out[i, j] = max(data_array[:, i, j])
 
     '''保存栅格样本文件'''
     driver = gdal.GetDriverByName("GTiff")
     ds = driver.Create(outRaster_file, image.RasterXSize, image.RasterYSize, 1, gdal.GDT_Byte)
     ds.SetGeoTransform(geotransform)
     ds.SetProjection(ref)
-    ds.GetRasterBand(1).WriteArray(data_out)
+    band = ds.GetRasterBand(1)
+    band.SetNoDataValue(0)
+    band.FlushCache()
+
+    gdal.RasterizeLayer(ds, [1], layer, options=["ATTRIBUTE=label"])
+
     image = None
     ds = None
     print(outRaster_file + ' success')
 
 os.remove('temp.tif') # 清理tmp_tif文件
-

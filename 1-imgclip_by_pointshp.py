@@ -127,20 +127,21 @@ def clip(out_tif_name, sr_img, point_shp, cut_cnt):
         feature.Destroy()
         feature = layer.GetNextFeature()
         
+        print(a1, a2, a3, a4)
 
     shp_dataset.Destroy()
     return cut_cnt
 
 
 # 防止GDAL报ERROR4错误 gdal_data文件夹需要相应配置
-os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data'
+# os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data'
 
-sr_image_path = r"F:\project_populus_GF2\4-predict_result\0414_full" #原始影像
-point_shp = r"F:\ITC_GF2_test\0-裁剪点\裁剪点.shp" #中心点point文件
-out_path = r"F:\ITC_GF2_test\1-semantic_segmentation_result" #输出目标文件夹
-datasize = 15000 #输出的影像大小（像素）
+sr_image_path = r"E:\project_hami_limuceng\0-srimg" #原始影像
+point_shp = r"E:\project_hami_limuceng\0-other_data\sample_points.shp" #中心点point文件
+out_path = r"E:\project_hami_limuceng\1-clip_img" #输出目标文件夹
+datasize = 512 #输出的影像大小（像素）
 img_type = '*.tif' #原始影像类型 不可漏*.
-output_prefix = 'ITC_GF2_TEST' #输出小块影像文件名的前缀
+output_prefix = 'hm_lmc' #输出小块影像文件名的前缀
 
 if not os.path.exists(out_path):
     os.mkdir(out_path)

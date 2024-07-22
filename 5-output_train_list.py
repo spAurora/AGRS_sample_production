@@ -13,12 +13,12 @@ Aerospace Information Research Institute, Chinese Academy of Sciences
 import fnmatch
 import os
 
-traintxt_path = r'E:\project_bai\2-trainlist\train_list_240523-1.txt' #输出栅格样本列表文件路径
-image_path = r'E:\project_bai\1-img' #存储样本影像的文件夹路径
-label_path = r'E:\project_bai\1-label' #存储栅格标签的文件夹路径
+traintxt_path = r'F:\0-project_backup\project_wafangdian_pre\2-train_list\trainlist_0722.txt' #输出栅格样本列表文件路径
+image_path = r'F:\0-project_backup\project_wafangdian_pre\2-enhanced_img' #存储样本影像的文件夹路径
+label_path = r'F:\0-project_backup\project_wafangdian_pre\2-enhanced_label' #存储栅格标签的文件夹路径
 
-img_data_tpye = '*.png'
-label_data_type = '*.png'
+img_data_tpye = '*.tif'
+label_data_type = '*.tif'
 
 img_list = fnmatch.filter(os.listdir(image_path), img_data_tpye) # 过滤文件
 f = open(traintxt_path, 'wb')

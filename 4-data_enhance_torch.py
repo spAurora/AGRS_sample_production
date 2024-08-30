@@ -85,14 +85,14 @@ else:
     torch.manual_seed(666)
 np.random.seed(666)
 
-images_path = r'E:\project_populus_UAV\1-clip_img\1-pretrain_img_240307' #原始影像路径 栅格
-label_path = r'E:\project_populus_UAV\1-raster_label\1-pretrain_rasterlabel_240307' #标签影像路径 栅格
-save_img_path = r'E:\project_populus_UAV\2-enhance_img' #保存增强后影像路径
-save_label_path = r'E:\project_populus_UAV\2-enhance_label' #保存增强后标签路径
+images_path = r'E:\project_GH_water\1-clip_img' #原始影像路径 栅格
+label_path = r'E:\project_GH_water\1-raster_label' #标签影像路径 栅格
+save_img_path = r'E:\project_GH_water\2-enhance_img' #保存增强后影像路径
+save_label_path = r'E:\project_GH_water\2-enhance_label' #保存增强后标签路径
 
-expandNum = 128 #每个样本的扩充数目
-randomCorpSize = 1024 #随机裁剪后的样本大小
-randomColorChangeRange = 0 #随机色彩变换范围 0~1，越大变化越强 #仅针对3波段影像
+expandNum = 64 #每个样本的扩充数目
+randomCorpSize = 512 #随机裁剪后的样本大小
+randomColorChangeRange = 0.03 #随机色彩变换范围 0~1，越大变化越强 #仅针对3波段影像
 ifGIDDataset = False
 GIDdatasetClassNum = 8
 

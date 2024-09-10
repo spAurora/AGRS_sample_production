@@ -257,8 +257,8 @@ for img_name in tqdm(image_list):
     label_full_path = os.path.join(label_path + '/' + img_name[0:-4] + '.tif')
 
     '''读取img和label数据'''
-    sr_img = read_img(img_full_path)
-    sr_label = read_img(label_full_path)
+    sr_img = read_img(img_full_path)[0]
+    sr_label = read_img(label_full_path)[0]
 
     sr_img = sr_img.transpose(1, 2, 0)
 

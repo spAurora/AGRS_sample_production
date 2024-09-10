@@ -18,13 +18,13 @@ import shutil
 import gdal
 import ogr
 
-os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data' #防止报error4错误
+# os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data' #防止报error4错误
 
-image_path = r'F:\project_populus_GF7\1-clip_img\test123_clip_img' #存储样本影像的文件夹
-line_path = r'F:\project_populus_GF7\1-artificial_shp\test123_artificial_shp' #存储人工勾画矢量的文件夹
-save_path = r'F:\project_populus_GF7\1-raster_label\test123_raster_label' #输出的矢量转栅格样本文件夹
+image_path = r'D:\WeChat Files\wxid_qg2ddhelak9h22\FileStorage\File\2024-08\new_gh\new_gh\gh_clip' #存储样本影像的文件夹
+line_path = r'D:\WeChat Files\wxid_qg2ddhelak9h22\FileStorage\File\2024-08\new_gh\new_gh\gh_label' #存储人工勾画矢量的文件夹
+save_path = r'E:\project_GH_water\1-raster_label_col' #输出的矢量转栅格样本文件夹
 background_value = 0 #栅格化后背景值
-foreground_value = 255 #栅格化后前景值
+foreground_value = 1 #栅格化后前景值
 
 if not os.path.exists(save_path):
     os.mkdir(save_path)

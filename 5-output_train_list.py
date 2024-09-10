@@ -13,9 +13,9 @@ Aerospace Information Research Institute, Chinese Academy of Sciences
 import fnmatch
 import os
 
-traintxt_path = r'E:\project_GH_water\2-train_list\trainlist_0825.txt' #输出栅格样本列表文件路径
-image_path = r'E:\project_GH_water\2-enhance_img' #存储样本影像的文件夹路径
-label_path = r'E:\project_GH_water\2-enhance_label' #存储栅格标签的文件夹路径
+traintxt_path = r'E:\project_GH_water\2-train_list\trainlist_0901.txt' #输出栅格样本列表文件路径
+image_path = r'E:\project_GH_water\2-enhance_img_col' #存储样本影像的文件夹路径
+label_path = r'E:\project_GH_water\2-enhance_label_col' #存储栅格标签的文件夹路径
 
 img_data_tpye = '*.tif'
 label_data_type = '*.tif'

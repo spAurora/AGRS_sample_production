@@ -136,12 +136,12 @@ def clip(out_tif_name, sr_img, point_shp, cut_cnt):
 # 防止GDAL报ERROR4错误 gdal_data文件夹需要相应配置
 # os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data'
 
-sr_image_path = r"E:\project_hami_limuceng\0-srimg" #原始影像
-point_shp = r"E:\project_hami_limuceng\0-other_data\sample_points.shp" #中心点point文件
-out_path = r"E:\project_hami_limuceng\1-clip_img" #输出目标文件夹
-datasize = 512 #输出的影像大小（像素）
+sr_image_path = r"E:\paper_lishuo_new\clip" #原始影像
+point_shp = r"E:\paper_lishuo_new\new-fig-5\0-clip_img\0-center_point\center_4.shp" #中心点point文件
+out_path = r"E:\paper_lishuo_new\new-fig-5\0-clip_img\1-clip_img\4" #输出目标文件夹
+datasize = 1000 #输出的影像大小（像素）
 img_type = '*.tif' #原始影像类型 不可漏*.
-output_prefix = 'hm_lmc' #输出小块影像文件名的前缀
+output_prefix = '4' #输出小块影像文件名的前缀
 
 if not os.path.exists(out_path):
     os.mkdir(out_path)
@@ -157,9 +157,9 @@ cut_cnt = 0
 for sr_img in sr_img_list:
     cnt = cnt+1
     shp_name, extension = os.path.splitext(sr_img)
-    sr_img = sr_image_path + '/' + shp_name + img_type[1:]
-    out_tif_name = out_path + '/' + output_prefix #改输出编号 
+    sr_img_full_path = sr_image_path + '/' + shp_name + img_type[1:]
+    out_tif_name = out_path + '/' + output_prefix+'_'+sr_img[:-4] #改输出编号 
     print('start clip image', cnt)
-    cut_cnt = clip(out_tif_name, sr_img, point_shp, cut_cnt)
+    cut_cnt = clip(out_tif_name, sr_img_full_path, point_shp, cut_cnt)
     print('clip image', cnt,'done')
 print('Finish!')

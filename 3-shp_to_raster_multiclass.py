@@ -20,11 +20,11 @@ import numpy as np
 import gdal
 import ogr
 
-image_path = r'E:\project_hami_limuceng\0-srimg' #存储样本影像的文件夹
-label_path = r'E:\project_hami_limuceng\00-哈密空间分析大图\兴趣区' #存储人工勾画矢量的文件夹
-save_path = r'E:\project_hami_limuceng\000-空间分析数据及结果' #输出的矢量转栅格样本文件夹
+image_path = r'D:\WeChat Files\wxid_qg2ddhelak9h22\FileStorage\File\2024-11\1-clip_img_Pam' #存储样本影像的文件夹
+label_path = r'D:\WeChat Files\wxid_qg2ddhelak9h22\FileStorage\File\2024-11\1-clip_shp_Pam' #存储人工勾画矢量的文件夹
+save_path = r'D:\WeChat Files\wxid_qg2ddhelak9h22\FileStorage\File\2024-11\1-label_raster_Pam' #输出的矢量转栅格样本文件夹
 
-class_num = 3 #类别数 不包含背景0
+class_num = 4 #类别数 不包含背景0
 
 if not os.path.exists(save_path):
     os.mkdir(save_path)

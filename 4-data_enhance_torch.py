@@ -123,13 +123,11 @@ for img_name in tqdm(image_list):
         im_aug = transforms.Compose([transforms.RandomCrop(randomCorpSize),      
                 transforms.RandomHorizontalFlip(p1),
                 transforms.RandomVerticalFlip(p2),
-                transforms.RandomRotation(p3),
                 transforms.ColorJitter(brightness=randomColorChangeRange, contrast=randomColorChangeRange, saturation=randomColorChangeRange, hue=randomColorChangeRange)])
 
         label_aug = transforms.Compose([transforms.RandomCrop(randomCorpSize),      
                 transforms.RandomHorizontalFlip(p1),
-                transforms.RandomVerticalFlip(p2),
-                transforms.RandomRotation(p3)
+                transforms.RandomVerticalFlip(p2)
                 ]) #标签颜色不能变换
 
         torch.manual_seed(i+627)

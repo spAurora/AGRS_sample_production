@@ -145,6 +145,26 @@ def AddHaze_ATSC_convw_perlin(img, band_index, apply_conv = True, apply_perlin =
 
     return data_output
 
+def Adjust_Color(img, band_index):
+    '''随机调整影像亮度及色彩
+    '''
+    max_brightness_shift = 0.4 # 亮度变化最大程度
+    offset_thread_list = [0, 0, -15, 0] # 各个波段的色彩偏移范围 根据影像实际情况而定
+
+    offset_thread = offset_thread_list[band_index]
+    if offset_thread < 0:
+        offset = np.random.uniform(offset_thread, 0)
+    elif offset_thread > 0:
+        offset = np.random.uniform(0, offset_thread)
+    else:
+        offset = 0
+    
+    brightness_shift_factor = 1 + np.random.uniform(-max_brightness_shift, max_brightness_shift)
+
+    data_output = np.clip(img*brightness_shift_factor + offset, 0, 255).astype(np.uint8)
+
+    return data_output
+
 def read_img(sr_img):
     """read img
 
@@ -167,7 +187,7 @@ def read_img(sr_img):
     return im_data, im_proj, im_geotrans, im_height, im_width, im_bands
 
 
-def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
+def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False, adjustColor=False):
     """output img
 
     Args:
@@ -205,7 +225,7 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
         elif mode == 1:
             tmp = im_data[i]
         else:
-            print('mode should 0 or 1!')
+            print('mode should be 0 or 1')
         im = Image.fromarray(tmp)
 
         if rotate == 0:
@@ -222,6 +242,10 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False):
             out = im.transpose(Image.ROTATE_270)
 
         tmp = np.array(out)
+        
+        '''色彩调整'''
+        if adjustColor == True:
+            tmp = Adjust_Color(tmp, i)
 
         '''加云'''
         if addHaze == True:
@@ -239,9 +263,11 @@ save_img_path = r'E:\project_TIM\2-enhance_img_addHeight'  # 保存增强后影�
 save_label_path = r'E:\project_TIM\2-enhance_label_addHeight'  # 保存增强后标签路径
 
 expandNum = 4  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
-randomCorpSize = 512  # 随机裁剪后的样本大小
-img_edge_width = 1000  # 输入影像的大小
-add_haze_rate = 0.2  # 加雾的图像比例
+randomCorpSize = 256  # 随机裁剪后的样本大小
+img_edge_width = 512  # 输入影像的大小
+
+add_haze_rate = 0  # 加雾的图像比例
+adjust_color_rate = 0.8 # 色彩调整的比例
 
 max_thread = randomCorpSize / img_edge_width
 
@@ -289,8 +315,15 @@ for img_name in tqdm(image_list):
                 addHaze = False
             else:
                 addHaze = True # 添加模拟云
-                print(i, cnt)
+
+            k = np.random.uniform(0, 1) # 生成随机数
+            if k > add_haze_rate: # 判断随机数是否大于一个比例
+                adjustColor = False
+            else:
+                adjustColor = True # 调整色彩            
+
+
             write_img(save_img_full_path, new_sr_img,
-                      mode=1, rotate=j, addHaze=addHaze)
+                      mode=1, rotate=j, addHaze=addHaze, adjustColor=adjustColor)
             write_img(save_label_full_path, new_label_img,
-                      mode=0, rotate=j, addHaze=False)
+                      mode=0, rotate=j, addHaze=False, adjustColor=False)

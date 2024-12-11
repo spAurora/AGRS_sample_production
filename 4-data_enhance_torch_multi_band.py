@@ -257,19 +257,16 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False, adjustColor=Fa
     del new_dataset
 
 
-images_path = r'E:\project_TIM\1-clip_img_addHeight'  # 原始影像路径 栅格
-label_path = r'E:\project_TIM\1-raster_label_addHeight'  # 标签影像路径 栅格
-save_img_path = r'E:\project_TIM\2-enhance_img_addHeight'  # 保存增强后影像路径
-save_label_path = r'E:\project_TIM\2-enhance_label_addHeight'  # 保存增强后标签路径
+images_path = r'D:\MAE_populus\1-clip_img\negative-4'  # 原始影像路径 栅格
+label_path = r'D:\MAE_populus\1-raster_label\negative-4'  # 标签影像路径 栅格
+save_img_path = r'D:\MAE_populus\2-enhance_img\2-enhance_img_negative'  # 保存增强后影像路径
+save_label_path = r'D:\MAE_populus\2-enhance_label\2-enhance_label_negative'  # 保存增强后标签路径
 
-expandNum = 4  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
+expandNum = 1  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
 randomCorpSize = 256  # 随机裁剪后的样本大小
-img_edge_width = 512  # 输入影像的大小
 
 add_haze_rate = 0  # 加雾的图像比例
-adjust_color_rate = 0.8 # 色彩调整的比例
-
-max_thread = randomCorpSize / img_edge_width
+adjust_color_rate = 0.5# 色彩调整的比例
 
 if not os.path.exists(save_img_path):
     os.mkdir(save_img_path)
@@ -287,6 +284,9 @@ for img_name in tqdm(image_list):
     sr_label = read_img(label_full_path)[0]
 
     sr_img = sr_img.transpose(1, 2, 0)
+
+    img_edge_width = sr_img.shape[0]
+    max_thread = randomCorpSize / img_edge_width
 
     '''样本扩增'''
     cnt = 0

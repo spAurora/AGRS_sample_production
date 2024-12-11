@@ -20,11 +20,11 @@ import ogr
 
 # os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data' #防止报error4错误
 
-image_path = r'D:\WeChat Files\wxid_qg2ddhelak9h22\FileStorage\File\2024-08\new_gh\new_gh\gh_clip' #存储样本影像的文件夹
-line_path = r'D:\WeChat Files\wxid_qg2ddhelak9h22\FileStorage\File\2024-08\new_gh\new_gh\gh_label' #存储人工勾画矢量的文件夹
-save_path = r'E:\project_GH_water\1-raster_label_col' #输出的矢量转栅格样本文件夹
+image_path = r'D:\MAE_populus\0-other_data\control\1-control_clip_img_241112' #存储样本影像的文件夹
+line_path = r'D:\MAE_populus\0-other_data\control\1-control_artificial_shp_241112' #存储人工勾画矢量的文件夹
+save_path = r'D:\MAE_populus\0-other_data\control\1-raster_label' #输出的矢量转栅格样本文件夹
 background_value = 0 #栅格化后背景值
-foreground_value = 1 #栅格化后前景值
+foreground_value = 255 #栅格化后前景值
 
 if not os.path.exists(save_path):
     os.mkdir(save_path)

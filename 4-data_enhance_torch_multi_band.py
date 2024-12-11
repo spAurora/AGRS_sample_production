@@ -17,7 +17,7 @@ import gdal
 import sys
 from skimage import transform
 from PIL import Image
-from noise import pnoise2, snoise2
+# from noise import pnoise2, snoise2
 import math
 from scipy.signal import convolve2d
 
@@ -257,17 +257,17 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False, adjustColor=Fa
     del new_dataset
 
 
-images_path = r'E:\project_TIM\1-clip_img_addHeight'  # 原始影像路径 栅格
-label_path = r'E:\project_TIM\1-raster_label_addHeight'  # 标签影像路径 栅格
-save_img_path = r'E:\project_TIM\2-enhance_img_addHeight'  # 保存增强后影像路径
-save_label_path = r'E:\project_TIM\2-enhance_label_addHeight'  # 保存增强后标签路径
+images_path = r'D:\test\1-img_NorthTianshan'  # 原始影像路径 栅格
+label_path = r'D:\test\1-raster_NorthTianshan'  # 标签影像路径 栅格
+save_img_path = r'D:\test\2-enhance_img'  # 保存增强后影像路径
+save_label_path = r'D:\test\2-enhance_label'  # 保存增强后标签路径
 
-expandNum = 4  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
+expandNum = 1  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
 randomCorpSize = 256  # 随机裁剪后的样本大小
-img_edge_width = 512  # 输入影像的大小
+img_edge_width = 768  # 输入影像的大小
 
 add_haze_rate = 0  # 加雾的图像比例
-adjust_color_rate = 0.8 # 色彩调整的比例
+adjust_color_rate = 0 # 色彩调整的比例
 
 max_thread = randomCorpSize / img_edge_width
 

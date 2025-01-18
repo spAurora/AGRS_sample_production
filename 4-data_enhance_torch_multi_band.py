@@ -317,7 +317,7 @@ for img_name in tqdm(image_list):
                 addHaze = True # 添加模拟云
 
             k = np.random.uniform(0, 1) # 生成随机数
-            if k > add_haze_rate: # 判断随机数是否大于一个比例
+            if k > adjust_color_rate: # 判断随机数是否大于一个比例
                 adjustColor = False
             else:
                 adjustColor = True # 调整色彩            

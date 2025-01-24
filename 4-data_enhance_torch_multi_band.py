@@ -149,7 +149,7 @@ def Adjust_Color(img, band_index):
     '''随机调整影像亮度及色彩
     '''
     max_brightness_shift = 0.4 # 亮度变化最大程度
-    offset_thread_list = [0, 0, -15, 0] # 各个波段的色彩偏移范围 根据影像实际情况而定
+    offset_thread_list = [0, 0, 0, 0] # 各个波段的色彩偏移范围 根据影像实际情况而定
 
     offset_thread = offset_thread_list[band_index]
     if offset_thread < 0:

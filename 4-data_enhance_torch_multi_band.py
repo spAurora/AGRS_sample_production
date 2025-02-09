@@ -149,15 +149,16 @@ def Adjust_Color(img, band_index):
     '''随机调整影像亮度及色彩
     '''
     max_brightness_shift = 0.4 # 亮度变化最大程度
-    offset_thread_list = [0, 0, 0, 0] # 各个波段的色彩偏移范围 根据影像实际情况而定
+    offset_thread_list = [20, 20, 20, 20] # 各个波段的色彩偏移范围 根据影像实际情况而定
 
     offset_thread = offset_thread_list[band_index]
-    if offset_thread < 0:
-        offset = np.random.uniform(offset_thread, 0)
-    elif offset_thread > 0:
-        offset = np.random.uniform(0, offset_thread)
-    else:
-        offset = 0
+    # if offset_thread < 0:
+    #     offset = np.random.uniform(offset_thread, 0)
+    # elif offset_thread > 0:
+    #     offset = np.random.uniform(0, offset_thread)
+    # else:
+    #     offset = 0
+    offset = np.random.uniform(-offset_thread, offset_thread)
     
     brightness_shift_factor = 1 + np.random.uniform(-max_brightness_shift, max_brightness_shift)
 
@@ -262,11 +263,11 @@ label_path = r'D:\MAE_populus\1-raster_label\negative-4'  # 标签影像路径 �
 save_img_path = r'D:\MAE_populus\2-enhance_img\2-enhance_img_negative'  # 保存增强后影像路径
 save_label_path = r'D:\MAE_populus\2-enhance_label\2-enhance_label_negative'  # 保存增强后标签路径
 
-expandNum = 1  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
+expandNum = 16  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
 randomCorpSize = 256  # 随机裁剪后的样本大小
 
 add_haze_rate = 0  # 加雾的图像比例
-adjust_color_rate = 0.5# 色彩调整的比例
+adjust_color_rate = 0.8 # 色彩调整的比例
 
 if not os.path.exists(save_img_path):
     os.mkdir(save_img_path)

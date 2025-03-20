@@ -21,13 +21,13 @@ import ogr
 from osgeo.gdal import Dataset, Driver
 import osr
 
-os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data' #防止报error4错误
+# os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data' #防止报error4错误
 
 gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8","NO") #路径支持中文
 gdal.SetConfigOption("SHAPE_ENCODING","") #属性表支持中文
 
-image_path = r'E:\project_hami_limuceng\1-clip_img' #存储样本影像的文件夹
-save_path = r'E:\project_hami_limuceng\1-artificial_shp' #输出的矢量文件夹
+image_path = r'H:\xinjiang_huyang_hongliu\250316_SS_demo\1-clip_img' #存储样本影像的文件夹
+save_path = r'H:\xinjiang_huyang_hongliu\250316_SS_demo\1-artificial_shp' #输出的矢量文件夹
 
 if not os.path.exists(save_path):
     os.mkdir(save_path)

@@ -202,8 +202,10 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False, adjustColor=Fa
     # identify data type
     if mode == 0:
         datatype = gdal.GDT_Byte
-    else:
+    elif mode == 1:
         datatype = gdal.GDT_Byte
+    elif mode == 2: # 16位影像
+        datatype = gdal.GDT_UInt16
 
     # calculate number of bands
     if len(im_data.shape) > 2:
@@ -224,10 +226,8 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False, adjustColor=Fa
     for i in range(im_bands):
         if mode == 0:
             tmp = im_data
-        elif mode == 1:
-            tmp = im_data[i]
         else:
-            print('mode should be 0 or 1')
+            tmp = im_data[i]
         im = Image.fromarray(tmp)
 
         if rotate == 0:
@@ -259,16 +259,18 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False, adjustColor=Fa
     del new_dataset
 
 
-images_path = r'D:\MAE_populus\1-clip_img\negative-4'  # 原始影像路径 栅格
-label_path = r'D:\MAE_populus\1-raster_label\negative-4'  # 标签影像路径 栅格
-save_img_path = r'D:\MAE_populus\2-enhance_img\2-enhance_img_negative'  # 保存增强后影像路径
-save_label_path = r'D:\MAE_populus\2-enhance_label\2-enhance_label_negative'  # 保存增强后标签路径
+images_path = r'H:\xinjiang_huyang_hongliu\250316_SS_demo\1-clip_img'  # 原始影像路径 栅格
+label_path = r'H:\xinjiang_huyang_hongliu\250316_SS_demo\1-raster_label'  # 标签影像路径 栅格
+save_img_path = r'H:\xinjiang_huyang_hongliu\250316_SS_demo\2-enhance_img'  # 保存增强后影像路径
+save_label_path = r'H:\xinjiang_huyang_hongliu\250316_SS_demo\2-enhance_label'  # 保存增强后标签路径
 
-expandNum = 18  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
+expandNum = 6  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
 randomCorpSize = 256  # 随机裁剪后的样本大小
 
+img_type_mode = 1 # 影像数据类型，1为uint8,2为uint16
+
 add_haze_rate = 0  # 加雾的图像比例
-adjust_color_rate = 0.8 # 色彩调整的比例
+adjust_color_rate = 0 # 色彩调整的比例
 
 if not os.path.exists(save_img_path):
     os.mkdir(save_img_path)
@@ -326,6 +328,6 @@ for img_name in tqdm(image_list):
 
 
             write_img(save_img_full_path, new_sr_img,
-                      mode=1, rotate=j, addHaze=addHaze, adjustColor=adjustColor)
+                      mode=img_type_mode, rotate=j, addHaze=addHaze, adjustColor=adjustColor)
             write_img(save_label_full_path, new_label_img,
                       mode=0, rotate=j, addHaze=False, adjustColor=False)

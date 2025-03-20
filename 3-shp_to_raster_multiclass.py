@@ -20,9 +20,9 @@ import numpy as np
 import gdal
 import ogr
 
-image_path = r'D:\WeChat Files\wxid_qg2ddhelak9h22\FileStorage\File\2024-11\1-clip_img_Pam' #存储样本影像的文件夹
-label_path = r'D:\WeChat Files\wxid_qg2ddhelak9h22\FileStorage\File\2024-11\1-clip_shp_Pam' #存储人工勾画矢量的文件夹
-save_path = r'D:\WeChat Files\wxid_qg2ddhelak9h22\FileStorage\File\2024-11\1-label_raster_Pam' #输出的矢量转栅格样本文件夹
+image_path = r'H:\xinjiang_huyang_hongliu\250316_SS_demo\1-clip_img' # 存储样本影像的文件夹
+label_path = r'H:\xinjiang_huyang_hongliu\250316_SS_demo\1-artificial_shp' # 存储人工勾画矢量的文件夹
+save_path = r'H:\xinjiang_huyang_hongliu\250316_SS_demo\1-raster_label' # 输出的矢量转栅格样本文件夹
 
 class_num = 4 #类别数 不包含背景0
 

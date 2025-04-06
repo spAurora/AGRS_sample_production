@@ -13,7 +13,7 @@ import numpy as np
 import os
 import fnmatch
 from tqdm import tqdm
-import gdal
+from osgeo import gdal
 import sys
 from skimage import transform
 from PIL import Image
@@ -259,13 +259,13 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False, adjustColor=Fa
     del new_dataset
 
 
-images_path = r'H:\xinjiang_huyang_hongliu\250316_SS_demo\1-clip_img'  # 原始影像路径 栅格
-label_path = r'H:\xinjiang_huyang_hongliu\250316_SS_demo\1-raster_label'  # 标签影像路径 栅格
-save_img_path = r'H:\xinjiang_huyang_hongliu\250316_SS_demo\2-enhance_img'  # 保存增强后影像路径
-save_label_path = r'H:\xinjiang_huyang_hongliu\250316_SS_demo\2-enhance_label'  # 保存增强后标签路径
+images_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2-new\1-img-enhance-432-ds3'  # 原始影像路径 栅格
+label_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2-new\1-line-raster_ds3'  # 标签影像路径 栅格
+save_img_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2-new\1-img-enhance-432-ds3-128'  # 保存增强后影像路径
+save_label_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2-new\1-line-raster_ds3-128'  # 保存增强后标签路径
 
-expandNum = 6  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
-randomCorpSize = 256  # 随机裁剪后的样本大小
+expandNum = 4  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
+randomCorpSize = 128  # 随机裁剪后的样本大小
 
 img_type_mode = 1 # 影像数据类型，1为uint8,2为uint16
 

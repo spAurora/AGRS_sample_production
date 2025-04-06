@@ -85,13 +85,13 @@ else:
     torch.manual_seed(666)
 np.random.seed(666)
 
-images_path = r'E:\project_GH_water\1-clip_img_col' #原始影像路径 栅格
-label_path = r'E:\project_GH_water\1-raster_label_col' #标签影像路径 栅格
-save_img_path = r'E:\project_GH_water\2-enhance_img_col' #保存增强后影像路径
-save_label_path = r'E:\project_GH_water\2-enhance_label_col' #保存增强后标签路径
+images_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2\image-uint8-432' #原始影像路径 栅格
+label_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2\label-raster' #标签影像路径 栅格
+save_img_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2\image-uint8-432-256' #保存增强后影像路径
+save_label_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2\label-raster-256' #保存增强后标签路径
 
-expandNum = 8 #每个样本的扩充数目
-randomCorpSize = 512 #随机裁剪后的样本大小
+expandNum = 32 #每个样本的扩充数目
+randomCorpSize = 256 #随机裁剪后的样本大小
 randomColorChangeRange = 0 #随机色彩变换范围 0~1，越大变化越强 #仅针对3波段影像
 ifGIDDataset = False
 GIDdatasetClassNum = 8

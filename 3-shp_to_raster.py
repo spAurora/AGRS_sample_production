@@ -19,9 +19,9 @@ from osgeo import gdal, ogr
 
 # os.environ['GDAL_DATA'] = r'C:\Users\75198\.conda\envs\learn\Lib\site-packages\GDAL-2.4.1-py3.6-win-amd64.egg-info\gata-data' #防止报error4错误
 
-image_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2-new\1-img-enhance-432-ds3' #存储样本影像的文件夹
-line_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2-new\1-line' #存储人工勾画矢量的文件夹
-save_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2-new\1-line-raster_ds3' #输出的矢量转栅格样本文件夹
+image_path = r'E:\project_global_populus\000-populus-sample\0-selected-sample-241111\0-image' #存储样本影像的文件夹
+line_path = r'E:\project_global_populus\000-populus-sample\0-selected-sample-241111\1-label_shp' #存储人工勾画矢量的文件夹
+save_path = r'E:\project_global_populus\000-populus-sample\0-selected-sample-241111\2-raster-label' #输出的矢量转栅格样本文件夹
 background_value = 0 #栅格化后背景值
 foreground_value = 255 #栅格化后前景值
 

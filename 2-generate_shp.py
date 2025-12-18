@@ -26,8 +26,8 @@ import osr
 gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8","NO") #路径支持中文
 gdal.SetConfigOption("SHAPE_ENCODING","") #属性表支持中文
 
-image_path = r'H:\xinjiang_huyang_hongliu\250316_SS_demo\1-clip_img' #存储样本影像的文件夹
-save_path = r'H:\xinjiang_huyang_hongliu\250316_SS_demo\1-artificial_shp' #输出的矢量文件夹
+image_path = r'C:\Users\ASUS\Desktop\kuang-image\1-clip_image' #存储样本影像的文件夹
+save_path = r'C:\Users\ASUS\Desktop\kuang-image\1-artificial_shp' #输出的矢量文件夹
 
 if not os.path.exists(save_path):
     os.mkdir(save_path)

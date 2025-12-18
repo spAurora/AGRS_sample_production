@@ -189,7 +189,7 @@ def read_img(sr_img):
     return im_data, im_proj, im_geotrans, im_height, im_width, im_bands
 
 
-def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False, adjustColor=False):
+def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False, adjustColor=False, im_proj=None, im_geotrans=None):
     """output img
 
     Args:
@@ -217,7 +217,8 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False, adjustColor=Fa
     driver = gdal.GetDriverByName("GTiff")
     new_dataset = driver.Create(
         out_path, im_width, im_height, im_bands, datatype)
-    
+    new_dataset.SetGeoTransform(im_geotrans)
+    new_dataset.SetProjection(im_proj)
     discrete_list = [4, 6, 8, 10, 12, 14] 
 
     seed = np.random.randint(1, 100)  # 柏林噪声种子
@@ -259,13 +260,13 @@ def write_img(out_path, im_data, mode=1, rotate=0, addHaze=False, adjustColor=Fa
     del new_dataset
 
 
-images_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2-new\1-img-enhance-432-ds3'  # 原始影像路径 栅格
-label_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2-new\1-line-raster_ds3'  # 标签影像路径 栅格
-save_img_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2-new\1-img-enhance-432-ds3-128'  # 保存增强后影像路径
-save_label_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2-new\1-line-raster_ds3-128'  # 保存增强后标签路径
+images_path = r'E:\0-benchmark\0-PTD\0-train\1-clip_img'  # 原始影像路径 栅格
+label_path = r'E:\0-benchmark\0-PTD\0-train\1-raster_label'  # 标签影像路径 栅格
+save_img_path = r'E:\0-benchmark\0-PTD\0-train\2-enhance_img'  # 保存增强后影像路径
+save_label_path = r'E:\0-benchmark\0-PTD\0-train\2-enhance_label'  # 保存增强后标签路径
 
-expandNum = 4  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
-randomCorpSize = 128  # 随机裁剪后的样本大小
+expandNum = 6  # 每个样本的基础扩充数目，最终数目会在基础扩充数目上*6
+randomCorpSize = 256  # 随机裁剪后的样本大小
 
 img_type_mode = 1 # 影像数据类型，1为uint8,2为uint16
 
@@ -284,8 +285,8 @@ for img_name in tqdm(image_list):
     label_full_path = os.path.join(label_path + '/' + img_name[0:-4] + '.tif')
 
     '''读取img和label数据'''
-    sr_img = read_img(img_full_path)[0]
-    sr_label = read_img(label_full_path)[0]
+    sr_img, im_proj, im_geotrans, im_height, im_width, im_bands = read_img(img_full_path)
+    sr_label, im_proj, im_geotrans, im_height, im_width, im_bands = read_img(label_full_path)
 
     sr_img = sr_img.transpose(1, 2, 0)
 
@@ -328,6 +329,6 @@ for img_name in tqdm(image_list):
 
 
             write_img(save_img_full_path, new_sr_img,
-                      mode=img_type_mode, rotate=j, addHaze=addHaze, adjustColor=adjustColor)
+                      mode=img_type_mode, rotate=j, addHaze=addHaze, adjustColor=adjustColor, im_proj=im_proj, im_geotrans=im_geotrans)
             write_img(save_label_full_path, new_label_img,
-                      mode=0, rotate=j, addHaze=False, adjustColor=False)
+                      mode=0, rotate=j, addHaze=False, adjustColor=False, im_proj=im_proj, im_geotrans=im_geotrans)

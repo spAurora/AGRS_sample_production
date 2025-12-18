@@ -85,10 +85,10 @@ else:
     torch.manual_seed(666)
 np.random.seed(666)
 
-images_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2\image-uint8-432' #原始影像路径 栅格
-label_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2\label-raster' #标签影像路径 栅格
-save_img_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2\image-uint8-432-256' #保存增强后影像路径
-save_label_path = r'D:\BaiduNetdiskDownload\MHdataset\MHparcel\hetian-GF2\label-raster-256' #保存增强后标签路径
+images_path = r'C:\Users\ASUS\Desktop\kuang-image\1-clip_image' #原始影像路径 栅格
+label_path = r'C:\Users\ASUS\Desktop\kuang-image\1-raster_label' #标签影像路径 栅格
+save_img_path = r'C:\Users\ASUS\Desktop\kuang-image\2-enhance_image' #保存增强后影像路径
+save_label_path = r'C:\Users\ASUS\Desktop\kuang-image\2-enhance_label' #保存增强后标签路径
 
 expandNum = 32 #每个样本的扩充数目
 randomCorpSize = 256 #随机裁剪后的样本大小
